@@ -14,27 +14,27 @@
  * @package WordPress
  */
 
-	// heroku cleardb settings.
-    $cleardb_url=parse_url(getenv("CLEARDB_DATABASE_URL"));
+// heroku cleardb settings.
+$cleardb_url=parse_url(getenv("CLEARDB_DATABASE_URL"));
 
-    $cleardb_server = $cleardb_url["host"];
-    $cleardb_username = $cleardb_url["user"];
-    $cleardb_password = $cleardb_url["pass"];
-    $cleardb_db = substr($cleardb_url["path"],1);
+$cleardb_server = $cleardb_url["host"];
+$cleardb_username = $cleardb_url["user"];
+$cleardb_password = $cleardb_url["pass"];
+$cleardb_db = substr($cleardb_url["path"],1);
 
 
 // ** MySQL settings - You can get this info from your web host ** //
 /** The name of the database for WordPress */
-define('DB_NAME', "$cleardb_db");
+define('DB_NAME', $cleardb_db);
 
 /** MySQL database username */
-define('DB_USER', "$cleardb_username");
+define('DB_USER', $cleardb_username);
 
 /** MySQL database password */
-define('DB_PASSWORD', "$cleardb_password");
+define('DB_PASSWORD', $cleardb_password);
 
 /** MySQL hostname */
-define('DB_HOST', "$cleardb_server");
+define('DB_HOST', $cleardb_server);
 
 /** Database Charset to use in creating database tables. */
 define('DB_CHARSET', 'utf8');
