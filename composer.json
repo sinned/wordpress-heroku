@@ -1,8 +1,8 @@
 {
   "require": {
     "php": "5.5.11",
-    "mysql": "*",
-    "mysqli": "*",
-    "memcached": "*"
+    "ext-mysql": "*",
+    "ext-mysqli": "*",
+    "ext-memcached": "*"
   }
 }
