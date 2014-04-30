@@ -14,13 +14,22 @@
  * @package WordPress
  */
 
-// heroku cleardb settings.
-$cleardb_url=parse_url(getenv("CLEARDB_DATABASE_URL"));
+switch ($_SERVER['SERVER_NAME']) {
+  case 'localhost':
+    $cleardb_server = 'localhost';
+    $cleardb_username = 'wordpress-heroku';
+    $cleardb_password = 'wordpress-heroku';
+    $cleardb_db = 'wordpress-heroku';
+  break;
+  default:
+    // heroku cleardb settings.
+    $cleardb_url=parse_url(getenv("CLEARDB_DATABASE_URL"));
 
-$cleardb_server = $cleardb_url["host"];
-$cleardb_username = $cleardb_url["user"];
-$cleardb_password = $cleardb_url["pass"];
-$cleardb_db = substr($cleardb_url["path"],1);
+    $cleardb_server = $cleardb_url["host"];
+    $cleardb_username = $cleardb_url["user"];
+    $cleardb_password = $cleardb_url["pass"];
+    $cleardb_db = substr($cleardb_url["path"],1);
+}
 
 
 // ** MySQL settings - You can get this info from your web host ** //
