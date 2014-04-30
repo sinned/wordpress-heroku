@@ -7,7 +7,7 @@
  */
 
 /** WordPress Administration Bootstrap */
-require_once('./admin.php');
+require_once( dirname( __FILE__ ) . '/admin.php' );
 
 if ( ! current_user_can( 'manage_options' ) )
 	wp_die( __( 'You do not have sufficient permissions to manage options for this site.' ) );
@@ -20,10 +20,9 @@ $timezone_format = _x('Y-m-d G:i:s', 'timezone date format');
 /**
  * Display JavaScript on the page.
  *
- * @package WordPress
- * @subpackage General_Settings_Screen
+ * @since 3.5.0
  */
-function add_js() {
+function options_general_add_js() {
 ?>
 <script type="text/javascript">
 //<![CDATA[
@@ -33,7 +32,7 @@ function add_js() {
 				$("input[name='date_format_custom']").val( $(this).val() ).siblings('.example').text( $(this).siblings('span').text() );
 		});
 		$("input[name='date_format_custom']").focus(function(){
-			$("#date_format_custom_radio").attr("checked", "checked");
+			$( '#date_format_custom_radio' ).prop( 'checked', true );
 		});
 
 		$("input[name='time_format']").click(function(){
@@ -41,22 +40,22 @@ function add_js() {
 				$("input[name='time_format_custom']").val( $(this).val() ).siblings('.example').text( $(this).siblings('span').text() );
 		});
 		$("input[name='time_format_custom']").focus(function(){
-			$("#time_format_custom_radio").attr("checked", "checked");
+			$( '#time_format_custom_radio' ).prop( 'checked', true );
 		});
 		$("input[name='date_format_custom'], input[name='time_format_custom']").change( function() {
 			var format = $(this);
-			format.siblings('img').css('visibility','visible');
+			format.siblings('.spinner').css('display', 'inline-block'); // show(); can't be used here
 			$.post(ajaxurl, {
 					action: 'date_format_custom' == format.attr('name') ? 'date_format' : 'time_format',
 					date : format.val()
-				}, function(d) { format.siblings('img').css('visibility','hidden'); format.siblings('.example').text(d); } );
+				}, function(d) { format.siblings('.spinner').hide(); format.siblings('.example').text(d); } );
 		});
 	});
 //]]>
 </script>
 <?php
 }
-add_action('admin_head', 'add_js');
+add_action('admin_head', 'options_general_add_js');
 
 $options_help = '<p>' . __('The fields on this screen determine some of the basics of your site setup.') . '</p>' .
 	'<p>' . __('Most themes display the site title at the top of every page, in the title bar of the browser, and as the identifying name for syndicated feeds. The tagline is also displayed by many themes.') . '</p>';
@@ -78,59 +77,58 @@ get_current_screen()->add_help_tab( array(
 get_current_screen()->set_help_sidebar(
 	'<p><strong>' . __('For more information:') . '</strong></p>' .
 	'<p>' . __('<a href="http://codex.wordpress.org/Settings_General_Screen" target="_blank">Documentation on General Settings</a>') . '</p>' .
-	'<p>' . __('<a href="http://wordpress.org/support/" target="_blank">Support Forums</a>') . '</p>'
+	'<p>' . __('<a href="https://wordpress.org/support/" target="_blank">Support Forums</a>') . '</p>'
 );
 
-include('./admin-header.php');
+include( ABSPATH . 'wp-admin/admin-header.php' );
 ?>
 
 <div class="wrap">
-<?php screen_icon(); ?>
 <h2><?php echo esc_html( $title ); ?></h2>
 
 <form method="post" action="options.php">
 <?php settings_fields('general'); ?>
 
 <table class="form-table">
-<tr valign="top">
+<tr>
 <th scope="row"><label for="blogname"><?php _e('Site Title') ?></label></th>
 <td><input name="blogname" type="text" id="blogname" value="<?php form_option('blogname'); ?>" class="regular-text" /></td>
 </tr>
-<tr valign="top">
+<tr>
 <th scope="row"><label for="blogdescription"><?php _e('Tagline') ?></label></th>
 <td><input name="blogdescription" type="text" id="blogdescription" value="<?php form_option('blogdescription'); ?>" class="regular-text" />
 <p class="description"><?php _e('In a few words, explain what this site is about.') ?></p></td>
 </tr>
 <?php if ( !is_multisite() ) { ?>
-<tr valign="top">
+<tr>
 <th scope="row"><label for="siteurl"><?php _e('WordPress Address (URL)') ?></label></th>
 <td><input name="siteurl" type="text" id="siteurl" value="<?php form_option('siteurl'); ?>"<?php disabled( defined( 'WP_SITEURL' ) ); ?> class="regular-text code<?php if ( defined( 'WP_SITEURL' ) ) echo ' disabled' ?>" /></td>
 </tr>
-<tr valign="top">
+<tr>
 <th scope="row"><label for="home"><?php _e('Site Address (URL)') ?></label></th>
 <td><input name="home" type="text" id="home" value="<?php form_option('home'); ?>"<?php disabled( defined( 'WP_HOME' ) ); ?> class="regular-text code<?php if ( defined( 'WP_HOME' ) ) echo ' disabled' ?>" />
 <p class="description"><?php _e('Enter the address here if you want your site homepage <a href="http://codex.wordpress.org/Giving_WordPress_Its_Own_Directory">to be different from the directory</a> you installed WordPress.'); ?></p></td>
 </tr>
-<tr valign="top">
+<tr>
 <th scope="row"><label for="admin_email"><?php _e('E-mail Address') ?> </label></th>
 <td><input name="admin_email" type="text" id="admin_email" value="<?php form_option('admin_email'); ?>" class="regular-text ltr" />
 <p class="description"><?php _e('This address is used for admin purposes, like new user notification.') ?></p></td>
 </tr>
-<tr valign="top">
+<tr>
 <th scope="row"><?php _e('Membership') ?></th>
 <td> <fieldset><legend class="screen-reader-text"><span><?php _e('Membership') ?></span></legend><label for="users_can_register">
 <input name="users_can_register" type="checkbox" id="users_can_register" value="1" <?php checked('1', get_option('users_can_register')); ?> />
 <?php _e('Anyone can register') ?></label>
 </fieldset></td>
 </tr>
-<tr valign="top">
+<tr>
 <th scope="row"><label for="default_role"><?php _e('New User Default Role') ?></label></th>
 <td>
 <select name="default_role" id="default_role"><?php wp_dropdown_roles( get_option('default_role') ); ?></select>
 </td>
 </tr>
 <?php } else { ?>
-<tr valign="top">
+<tr>
 <th scope="row"><label for="new_admin_email"><?php _e('E-mail Address') ?> </label></th>
 <td><input name="new_admin_email" type="text" id="new_admin_email" value="<?php form_option('admin_email'); ?>" class="regular-text ltr" />
 <p class="description"><?php _e('This address is used for admin purposes. If you change this we will send you an e-mail at your new address to confirm it. <strong>The new address will not become active until confirmed.</strong>') ?></p>
@@ -230,13 +228,14 @@ if ( empty($tzstring) ) { // Create a UTC+- zone if no timezone string exists
 <td>
 	<fieldset><legend class="screen-reader-text"><span><?php _e('Date Format') ?></span></legend>
 <?php
-
-	$date_formats = apply_filters( 'date_formats', array(
-		__('F j, Y'),
-		'Y/m/d',
-		'm/d/Y',
-		'd/m/Y',
-	) );
+	/**
+	* Filter the default date formats.
+	*
+	* @since 2.7.0
+	*
+	* @param array $default_date_formats Array of default date formats.
+	*/
+	$date_formats = array_unique( apply_filters( 'date_formats', array( __( 'F j, Y' ), 'Y/m/d', 'm/d/Y', 'd/m/Y' ) ) );
 
 	$custom = true;
 
@@ -251,7 +250,7 @@ if ( empty($tzstring) ) { // Create a UTC+- zone if no timezone string exists
 
 	echo '	<label><input type="radio" name="date_format" id="date_format_custom_radio" value="\c\u\s\t\o\m"';
 	checked( $custom );
-	echo '/> ' . __('Custom:') . ' </label><input type="text" name="date_format_custom" value="' . esc_attr( get_option('date_format') ) . '" class="small-text" /> <span class="example"> ' . date_i18n( get_option('date_format') ) . "</span> <img class='ajax-loading' src='" . esc_url( admin_url( 'images/wpspin_light.gif' ) ) . "' />\n";
+	echo '/> ' . __('Custom:') . ' </label><input type="text" name="date_format_custom" value="' . esc_attr( get_option('date_format') ) . '" class="small-text" /> <span class="example"> ' . date_i18n( get_option('date_format') ) . "</span> <span class='spinner'></span>\n";
 
 	echo "\t<p>" . __('<a href="http://codex.wordpress.org/Formatting_Date_and_Time">Documentation on date and time formatting</a>.') . "</p>\n";
 ?>
@@ -263,12 +262,14 @@ if ( empty($tzstring) ) { // Create a UTC+- zone if no timezone string exists
 <td>
 	<fieldset><legend class="screen-reader-text"><span><?php _e('Time Format') ?></span></legend>
 <?php
-
-	$time_formats = apply_filters( 'time_formats', array(
-		__('g:i a'),
-		'g:i A',
-		'H:i',
-	) );
+	/**
+	* Filter the default time formats.
+	*
+	* @since 2.7.0
+	*
+	* @param array $default_time_formats Array of default time formats.
+	*/
+	$time_formats = array_unique( apply_filters( 'time_formats', array( __( 'g:i a' ), 'g:i A', 'H:i' ) ) );
 
 	$custom = true;
 
@@ -283,7 +284,7 @@ if ( empty($tzstring) ) { // Create a UTC+- zone if no timezone string exists
 
 	echo '	<label><input type="radio" name="time_format" id="time_format_custom_radio" value="\c\u\s\t\o\m"';
 	checked( $custom );
-	echo '/> ' . __('Custom:') . ' </label><input type="text" name="time_format_custom" value="' . esc_attr( get_option('time_format') ) . '" class="small-text" /> <span class="example"> ' . date_i18n( get_option('time_format') ) . "</span> <img class='ajax-loading' src='" . esc_url( admin_url( 'images/wpspin_light.gif' ) ) . "' />\n";
+	echo '/> ' . __('Custom:') . ' </label><input type="text" name="time_format_custom" value="' . esc_attr( get_option('time_format') ) . '" class="small-text" /> <span class="example"> ' . date_i18n( get_option('time_format') ) . "</span> <span class='spinner'></span>\n";
 	;
 ?>
 	</fieldset>
@@ -305,7 +306,7 @@ endfor;
 	$languages = get_available_languages();
 	if ( is_multisite() && !empty( $languages ) ):
 ?>
-	<tr valign="top">
+	<tr>
 		<th width="33%" scope="row"><?php _e('Site Language') ?></th>
 		<td>
 			<select name="WPLANG" id="WPLANG">
@@ -325,4 +326,4 @@ endfor;
 
 </div>
 
-<?php include('./admin-footer.php') ?>
+<?php include( ABSPATH . 'wp-admin/admin-footer.php' ); ?>

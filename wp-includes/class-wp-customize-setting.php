@@ -1,36 +1,79 @@
 <?php
 /**
- * Customize Setting Class
+ * Customize Setting Class.
+ *
+ * Handles saving and sanitizing of settings.
  *
  * @package WordPress
  * @subpackage Customize
  * @since 3.4.0
  */
-
 class WP_Customize_Setting {
+	/**
+	 * @access public
+	 * @var WP_Customize_Manager
+	 */
 	public $manager;
+
+	/**
+	 * @access public
+	 * @var string
+	 */
 	public $id;
 
-	public $type            = 'theme_mod';
-	public $capability      = 'edit_theme_options';
+	/**
+	 * @access public
+	 * @var string
+	 */
+	public $type = 'theme_mod';
+
+	/**
+	 * Capability required to edit this setting.
+	 *
+	 * @var string
+	 */
+	public $capability = 'edit_theme_options';
+
+	/**
+	 * Feature a theme is required to support to enable this setting.
+	 *
+	 * @access public
+	 * @var string
+	 */
 	public $theme_supports  = '';
 	public $default         = '';
 	public $transport       = 'refresh';
 
+	/**
+	 * Server-side sanitization callback for the setting's value.
+	 *
+	 * @var callback
+	 */
 	public $sanitize_callback    = '';
 	public $sanitize_js_callback = '';
 
 	protected $id_data = array();
-	private $_post_value; // Cached, sanitized $_POST value.
+
+	/**
+	 * Cached and sanitized $_POST value for the setting.
+	 *
+	 * @access private
+	 * @var mixed
+	 */
+	private $_post_value;
 
 	/**
 	 * Constructor.
 	 *
+	 * Any supplied $args override class property defaults.
+	 *
 	 * @since 3.4.0
 	 *
-	 * @param string $id An specific ID of the setting. Can be a
-	 *                   theme mod or option name.
-	 * @param array $args Setting arguments.
+	 * @param WP_Customize_Manager $manager
+	 * @param string               $id      An specific ID of the setting. Can be a
+	 *                                      theme mod or option name.
+	 * @param array                $args    Setting arguments.
+	 * @return WP_Customize_Setting $setting
 	 */
 	function __construct( $manager, $id, $args = array() ) {
 		$keys = array_keys( get_class_vars( __CLASS__ ) );
@@ -79,6 +122,15 @@ class WP_Customize_Setting {
 				}
 				break;
 			default :
+
+				/**
+				 * Fires when the WP_Customize_Setting::preview() method is called for settings
+				 * not handled as theme_mods or options.
+				 *
+				 * The dynamic portion of the hook name, $this->id, refers to the setting ID.
+				 *
+				 * @since 3.4.0
+				 */
 				do_action( 'customize_preview_' . $this->id );
 		}
 	}
@@ -87,8 +139,9 @@ class WP_Customize_Setting {
 	 * Callback function to filter the theme mods and options.
 	 *
 	 * @since 3.4.0
+	 * @uses WP_Customize_Setting::multidimensional_replace()
 	 *
-	 * @param mixed Old value.
+	 * @param mixed $original Old value.
 	 * @return mixed New or old value.
 	 */
 	public function _preview_filter( $original ) {
@@ -96,7 +149,8 @@ class WP_Customize_Setting {
 	}
 
 	/**
-	 * Set the value of the parameter for a specific theme.
+	 * Check user capabilities and theme supports, and then save
+	 * the value of the setting.
 	 *
 	 * @since 3.4.0
 	 *
@@ -108,23 +162,34 @@ class WP_Customize_Setting {
 		if ( ! $this->check_capabilities() || ! isset( $value ) )
 			return false;
 
+		/**
+		 * Fires when the WP_Customize_Setting::save() method is called for settings
+		 * not handled as theme_mods or options.
+		 *
+		 * The dynamic portion of the hook name, $this->id_data['base'] refers to
+		 * the base slug of the setting name.
+		 *
+		 * @since 3.4.0
+		 */
 		do_action( 'customize_save_' . $this->id_data[ 'base' ] );
 
 		$this->update( $value );
 	}
 
 	/**
-	 * Fetches, validates, and sanitizes the $_POST value.
+	 * Fetch and sanitize the $_POST value for the setting.
 	 *
 	 * @since 3.4.0
 	 *
-	 * @param $default mixed A default value which is used as a fallback. Default is null.
-	 * @return mixed Either the default value on failure or sanitized value.
+	 * @param mixed $default A default value which is used as a fallback. Default is null.
+	 * @return mixed The default value on failure, otherwise the sanitized value.
 	 */
 	public final function post_value( $default = null ) {
+		// Check for a cached value
 		if ( isset( $this->_post_value ) )
 			return $this->_post_value;
 
+		// Call the manager for the post value
 		$result = $this->manager->post_value( $this );
 
 		if ( isset( $result ) )
@@ -138,20 +203,29 @@ class WP_Customize_Setting {
 	 *
 	 * @since 3.4.0
 	 *
-	 * @param $value mixed The value to sanitize.
+	 * @param mixed $value The value to sanitize.
 	 * @return mixed Null if an input isn't valid, otherwise the sanitized value.
 	 */
 	public function sanitize( $value ) {
-		$value = stripslashes_deep( $value );
+		$value = wp_unslash( $value );
+
+		/**
+		 * Filter a Customize setting value in un-slashed form.
+		 *
+		 * @since 3.4.0
+		 *
+		 * @param mixed                $value Value of the setting.
+		 * @param WP_Customize_Setting $this  WP_Customize_Setting instance.
+		 */
 		return apply_filters( "customize_sanitize_{$this->id}", $value, $this );
 	}
 
 	/**
-	 * Set the value of the parameter for a specific theme.
+	 * Save the value of the setting, using the related API.
 	 *
 	 * @since 3.4.0
 	 *
-	 * @param $value mixed The value to update.
+	 * @param mixed $value The value to update.
 	 * @return mixed The result of saving the value.
 	 */
 	protected function update( $value ) {
@@ -163,6 +237,17 @@ class WP_Customize_Setting {
 				return $this->_update_option( $value );
 				break;
 			default :
+
+				/**
+				 * Fires when the WP_Customize_Setting::update() method is called for settings
+				 * not handled as theme_mods or options.
+				 *
+				 * The dynamic portion of the hook name, $this->type, refers to the type of setting.
+				 *
+				 * @since 3.4.0
+				 *
+				 * @param mixed $value Value of the setting.
+				 */
 				return do_action( 'customize_update_' . $this->type, $value );
 		}
 	}
@@ -172,7 +257,7 @@ class WP_Customize_Setting {
 	 *
 	 * @since 3.4.0
 	 *
-	 * @param $value mixed The value to update.
+	 * @param mixed $value The value to update.
 	 * @return mixed The result of saving the value.
 	 */
 	protected function _update_theme_mod( $value ) {
@@ -188,11 +273,11 @@ class WP_Customize_Setting {
 	}
 
 	/**
-	 * Update the theme mod from the value of the parameter.
+	 * Update the option from the value of the setting.
 	 *
 	 * @since 3.4.0
 	 *
-	 * @param $value mixed The value to update.
+	 * @param mixed $value The value to update.
 	 * @return mixed The result of saving the value.
 	 */
 	protected function _update_option( $value ) {
@@ -208,13 +293,14 @@ class WP_Customize_Setting {
 	}
 
 	/**
-	 * Fetch the value of the parameter for a specific theme.
+	 * Fetch the value of the setting.
 	 *
 	 * @since 3.4.0
 	 *
-	 * @return mixed The requested value.
+	 * @return mixed The value.
 	 */
 	public function value() {
+		// Get the callback that corresponds to the setting type.
 		switch( $this->type ) {
 			case 'theme_mod' :
 				$function = 'get_theme_mod';
@@ -223,6 +309,20 @@ class WP_Customize_Setting {
 				$function = 'get_option';
 				break;
 			default :
+
+				/**
+				 * Filter a Customize setting value not handled as a theme_mod or option.
+				 *
+				 * The dynamic portion of the hook name, $this->id_date['base'], refers to
+				 * the base slug of the setting name.
+				 *
+				 * For settings handled as theme_mods or options, see those corresponding
+				 * functions for available hooks.
+				 *
+				 * @since 3.4.0
+				 *
+				 * @param mixed $default The setting default value. Default empty.
+				 */
 				return apply_filters( 'customize_value_' . $this->id_data[ 'base' ], $this->default );
 		}
 
@@ -236,13 +336,24 @@ class WP_Customize_Setting {
 	}
 
 	/**
-	 * Escape the parameter's value for use in JavaScript.
+	 * Sanitize the setting's value for use in JavaScript.
 	 *
 	 * @since 3.4.0
 	 *
 	 * @return mixed The requested escaped value.
 	 */
 	public function js_value() {
+
+		/**
+		 * Filter a Customize setting value for use in JavaScript.
+		 *
+		 * The dynamic portion of the hook name, $this->id, refers to the setting ID.
+		 *
+		 * @since 3.4.0
+		 *
+		 * @param mixed                $value The setting value.
+		 * @param WP_Customize_Setting $this  WP_Customize_Setting instance.
+		 */
 		$value = apply_filters( "customize_sanitize_js_{$this->id}", $this->value(), $this );
 
 		if ( is_string( $value ) )
@@ -252,7 +363,7 @@ class WP_Customize_Setting {
 	}
 
 	/**
-	 * Check if the theme supports the setting and check user capabilities.
+	 * Validate user capabilities whether the theme supports the setting.
 	 *
 	 * @since 3.4.0
 	 *
@@ -276,7 +387,7 @@ class WP_Customize_Setting {
 	 * @param $root
 	 * @param $keys
 	 * @param bool $create Default is false.
-	 * @return null|array
+	 * @return null|array Keys are 'root', 'node', and 'key'.
 	 */
 	final protected function multidimensional( &$root, $keys, $create = false ) {
 		if ( $create && empty( $root ) )
@@ -372,19 +483,36 @@ class WP_Customize_Setting {
  * A setting that is used to filter a value, but will not save the results.
  *
  * Results should be properly handled using another setting or callback.
+ *
+ * @package WordPress
+ * @subpackage Customize
+ * @since 3.4.0
  */
 class WP_Customize_Filter_Setting extends WP_Customize_Setting {
-	public function update() {}
+
+	/**
+	 * @since 3.4.0
+	 */
+	public function update( $value ) {}
 }
 
 /**
  * A setting that is used to filter a value, but will not save the results.
  *
  * Results should be properly handled using another setting or callback.
+ *
+ * @package WordPress
+ * @subpackage Customize
+ * @since 3.4.0
  */
 final class WP_Customize_Header_Image_Setting extends WP_Customize_Setting {
 	public $id = 'header_image_data';
 
+	/**
+	 * @since 3.4.0
+	 *
+	 * @param $value
+	 */
 	public function update( $value ) {
 		global $custom_image_header;
 
@@ -400,9 +528,22 @@ final class WP_Customize_Header_Image_Setting extends WP_Customize_Setting {
 	}
 }
 
+/**
+ * Class WP_Customize_Background_Image_Setting
+ *
+ * @package WordPress
+ * @subpackage Customize
+ * @since 3.4.0
+ */
 final class WP_Customize_Background_Image_Setting extends WP_Customize_Setting {
 	public $id = 'background_image_thumb';
 
+	/**
+	 * @since 3.4.0
+	 * @uses remove_theme_mod()
+	 *
+	 * @param $value
+	 */
 	public function update( $value ) {
 		remove_theme_mod( 'background_image_thumb' );
 	}

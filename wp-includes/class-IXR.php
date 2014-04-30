@@ -30,7 +30,7 @@
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  * @package IXR
- * @since 1.5
+ * @since 1.5.0
  *
  * @copyright  Incutio Ltd 2010 (http://www.incutio.com)
  * @version    1.7.4 7th September 2010
@@ -43,7 +43,7 @@
  * IXR_Value
  *
  * @package IXR
- * @since 1.5
+ * @since 1.5.0
  */
 class IXR_Value {
     var $data;
@@ -171,7 +171,7 @@ class IXR_Value {
  * IXR_MESSAGE
  *
  * @package IXR
- * @since 1.5
+ * @since 1.5.0
  *
  */
 class IXR_Message
@@ -344,7 +344,7 @@ class IXR_Message
  * IXR_Server
  *
  * @package IXR
- * @since 1.5
+ * @since 1.5.0
  */
 class IXR_Server
 {
@@ -466,11 +466,18 @@ EOD;
 
     function output($xml)
     {
-        $xml = '<?xml version="1.0"?>'."\n".$xml;
+        $charset = function_exists('get_option') ? get_option('blog_charset') : '';
+        if ($charset)
+            $xml = '<?xml version="1.0" encoding="'.$charset.'"?>'."\n".$xml;
+        else
+            $xml = '<?xml version="1.0"?>'."\n".$xml;
         $length = strlen($xml);
         header('Connection: close');
         header('Content-Length: '.$length);
-        header('Content-Type: text/xml');
+        if ($charset)
+            header('Content-Type: text/xml; charset='.$charset);
+        else
+            header('Content-Type: text/xml');
         header('Date: '.date('r'));
         echo $xml;
         exit;
@@ -548,7 +555,7 @@ EOD;
  * IXR_Request
  *
  * @package IXR
- * @since 1.5
+ * @since 1.5.0
  */
 class IXR_Request
 {
@@ -591,7 +598,7 @@ EOD;
  * IXR_Client
  *
  * @package IXR
- * @since 1.5
+ * @since 1.5.0
  *
  */
 class IXR_Client
@@ -621,6 +628,10 @@ class IXR_Client
             // Make absolutely sure we have a path
             if (!$this->path) {
                 $this->path = '/';
+            }
+
+            if ( ! empty( $bits['query'] ) ) {
+                $this->path .= '?' . $bits['query'];
             }
         } else {
             $this->server = $server;
@@ -743,7 +754,7 @@ class IXR_Client
  * IXR_Error
  *
  * @package IXR
- * @since 1.5
+ * @since 1.5.0
  */
 class IXR_Error
 {
@@ -785,7 +796,7 @@ EOD;
  * IXR_Date
  *
  * @package IXR
- * @since 1.5
+ * @since 1.5.0
  */
 class IXR_Date {
     var $year;
@@ -848,7 +859,7 @@ class IXR_Date {
  * IXR_Base64
  *
  * @package IXR
- * @since 1.5
+ * @since 1.5.0
  */
 class IXR_Base64
 {
@@ -869,7 +880,7 @@ class IXR_Base64
  * IXR_IntrospectionServer
  *
  * @package IXR
- * @since 1.5
+ * @since 1.5.0
  */
 class IXR_IntrospectionServer extends IXR_Server
 {
@@ -1032,7 +1043,7 @@ class IXR_IntrospectionServer extends IXR_Server
  * IXR_ClientMulticall
  *
  * @package IXR
- * @since 1.5
+ * @since 1.5.0
  */
 class IXR_ClientMulticall extends IXR_Client
 {
