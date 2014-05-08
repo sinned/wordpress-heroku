@@ -18,14 +18,6 @@ Add a MySQL App to your app (in my case, I chose ClearDB)
 
 	$ heroku addons:add cleardb:ignite
 	
-Retrieve your database URL by issuing the following command (as per https://devcenter.heroku.com/articles/cleardb )
-
-	$ heroku config | grep CLEARDB_DATABASE_URL
-	
-Ok, now we should add our config variables
-
-	$ heroku config:add DATABASE_URL='mysql://adffdadf2341:adf4234@us-cdbr-east.cleardb.com/heroku_db?reconnect=true'
-
 With this config set, now we can push to heroku
 	$ git push heroku master
 	
