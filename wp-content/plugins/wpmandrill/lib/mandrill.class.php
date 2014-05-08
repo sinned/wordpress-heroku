@@ -9,9 +9,6 @@ class Mandrill {
     var $api;
     var $output;
     
-    // PHP 4.0
-    function Mandrill($api) { $this->__construct($api); }
-    
     // PHP 5.0
     function __construct($api) {
         if ( empty($api) ) throw new Mandrill_Exception('Invalid API key');
@@ -27,7 +24,10 @@ class Mandrill {
         }
     }
     
-	/**
+    // PHP 4.0
+    function Mandrill($api) { $this->__construct($api); }
+    
+    /**
 	 * Work horse. Every API call use this function to actually make the request to Mandrill's servers.
 	 *
 	 * @link https://mandrillapp.com/api/docs/
@@ -96,7 +96,8 @@ class Mandrill {
 		if( 200 == $response_code ) {
 			return $body;
 		} else {
-			throw new Mandrill_Exception( "HTTP Code $response_code: $url", $response_code);
+			error_log("wpMandrill Error: Error {$body['code']}: {$body['message']}");
+			throw new Mandrill_Exception( "wpMandrill Error: {$body['code']}: {$body['message']}", $response_code);
 		}
 	}
 
@@ -384,16 +385,24 @@ class Mandrill {
 	 * @return array|Mandrill_Exception
 	 */
 	function messages_send($message) {
-		return $this->request('messages/send', array('message' => $message) );
+		$async = $message['async'];
+		$ip_pool = $message['ip_pool'];
+		$send_at = $message['send_at'];
+		
+		return $this->request('messages/send', array('message' => $message, 'async' => $async, 'ip_pool' => $ip_pool, 'send_at' => $send_at) );
 	}
-
+ 
 	/**
 	 * @link https://mandrillapp.com/api/docs/messages.html#method=send-template
 	 *
 	 * @return array|Mandrill_Exception
 	 */
 	function messages_send_template($template_name, $template_content, $message) {
-		return $this->request('messages/send-template', compact('template_name', 'template_content','message') );
+		$async = $message['async'];
+		$ip_pool = $message['ip_pool'];
+		$send_at = $message['send_at'];
+		
+		return $this->request('messages/send-template', compact('template_name', 'template_content','message', 'async', 'ip_pool', 'send_at') );
 	}
 
     function http_request($url, $fields = array(), $method = 'POST') {
@@ -415,6 +424,8 @@ class Mandrill {
             ini_set("arg_separator.output", $orig_sep);
         }
         
+        $useragent = wpMandrill::getUserAgent();
+        
         if( function_exists('curl_init') && function_exists('curl_exec') ) {
         
             if( !ini_get('safe_mode') ){
@@ -428,6 +439,9 @@ class Mandrill {
                 
                 curl_setopt($ch, CURLOPT_POSTFIELDS, $fields);
                 
+				curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);	// @Bruno Braga:
+				curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);	//	Thanks for the hack!
+				curl_setopt($ch, CURLOPT_USERAGENT,$useragent);
                 curl_setopt($ch, CURLOPT_HTTPHEADER, array('Expect:'));
                 curl_setopt($ch, CURLOPT_HEADER, false);
                 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -475,6 +489,7 @@ class Mandrill {
                 $payload = "$method $path HTTP/1.0\r\n" .
 		            "Host: $host\r\n" . 
 		            "Connection: close\r\n"  .
+                	"User-Agent: $useragent\r\n" .
                     "Content-type: application/x-www-form-urlencoded\r\n" .
                     "Content-length: " . strlen($params) . "\r\n" .
                     "Connection: close\r\n\r\n" .
@@ -535,17 +550,15 @@ class Mandrill {
             
             if (strnatcmp(phpversion(),'6') >= 0) set_magic_quotes_runtime($magic_quotes);
             
-            if (strnatcmp(phpversion(),'5.3') >= 0) {
+            $mime_type = '';
+			if ( function_exists('finfo_open') && function_exists('finfo_file') ) {
                 $finfo = finfo_open(FILEINFO_MIME_TYPE);
                 $mime_type = finfo_file($finfo, $path);
-            } else {
+            } elseif ( function_exists('mime_content_type') ) {
                 $mime_type = mime_content_type($path);
             }
-            
-            if ( !Mandrill::isValidContentType($mime_type) ) 
-                throw new Exception($mime_type.' is not a valid content type (it should be '.implode('*,', self::getValidContentTypes() ).').');
 
-            $struct['type']     = $mime_type;
+            if ( !empty($mime_type) ) $struct['type']     = $mime_type;
             $struct['name']     = $filename;
             $struct['content']  = $file_buffer;
 
@@ -557,13 +570,8 @@ class Mandrill {
     }
     
     static function isValidContentType($ct) {
-        $valids = self::getValidContentTypes();
-        
-        foreach ( $valids as $vct ) {
-            if ( strpos($ct, $vct) !== false )  return true;
-        }
-
-        return false;
+        // Now Mandrill accepts any content type. 
+        return true;
     }
     
     static function getValidContentTypes() {

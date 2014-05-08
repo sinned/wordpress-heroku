@@ -58,7 +58,6 @@ function showStats() {
             },  
         error: function(MLHttpRequest, textStatus, errorThrown){  
                 jQuery('#loading_data').css('display','none');
-                alert(errorThrown);  
             }  
     });
     
@@ -77,8 +76,7 @@ function redrawDashboardWidget() {
         success: function(data, textStatus, XMLHttpRequest){  
                 eval(data);
             },  
-        error: function(MLHttpRequest, textStatus, errorThrown){  
-                alert(textStatus + ' ' + errorThrown);
+        error: function(MLHttpRequest, textStatus, errorThrown){ 
                 jQuery('#mandrill_widget div#filtered_recent').html('');
             }  
     });

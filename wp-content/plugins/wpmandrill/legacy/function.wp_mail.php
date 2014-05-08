@@ -11,7 +11,7 @@
 	if ( !is_object( $phpmailer ) || !is_a( $phpmailer, 'PHPMailer' ) ) {
 		require_once ABSPATH . WPINC . '/class-phpmailer.php';
 		require_once ABSPATH . WPINC . '/class-smtp.php';
-		$phpmailer = new PHPMailer();
+		$phpmailer = new PHPMailer( true );
 	}
 
 	// Headers
@@ -26,7 +26,9 @@
 			$tempheaders = $headers;
 		}
 		$headers = array();
-
+        $cc = array();
+        $bcc = array();
+        
 		// If it's actually got contents
 		if ( !empty( $tempheaders ) ) {
 			// Iterate through the raw headers
@@ -94,10 +96,7 @@
 	$phpmailer->ClearAddresses();
 	$phpmailer->ClearAllRecipients();
 	$phpmailer->ClearAttachments();
-	$phpmailer->ClearBCCs();
-	$phpmailer->ClearCCs();
-	$phpmailer->ClearCustomHeaders();
-	$phpmailer->ClearReplyTos();
+	$phpmailer->ClearBCCs();/* $phpmailer->ClearCCs();	$phpmailer->ClearCustomHeaders(); 	$phpmailer->ClearReplyTos(); */
 
 	// From email and name
 	// If we don't have a name from the input headers
@@ -130,7 +129,19 @@
 		$to = explode( ',', $to );
 
 	foreach ( (array) $to as $recipient ) {
-		$phpmailer->AddAddress( trim( $recipient ) );
+		try {
+            // Break $recipient into name and address parts if in the format "Foo <bar@baz.com>"
+            $recipient_name = '';
+            if( preg_match( '/(.*)<(.+)>/', $recipient, $matches ) ) {
+                if ( count( $matches ) == 3 ) {
+                    $recipient_name = $matches[1];
+                    $recipient = $matches[2];
+                }
+            }
+            $phpmailer->AddAddress( $recipient, $recipient_name);
+        } catch ( phpmailerException $e ) {
+            continue;
+        }
 	}
 
 	// Set mail's subject and body
@@ -140,13 +151,37 @@
 	// Add any CC and BCC recipients
 	if ( !empty( $cc ) ) {
 		foreach ( (array) $cc as $recipient ) {
-			$phpmailer->AddCc( trim($recipient) );
+			try {
+                // Break $recipient into name and address parts if in the format "Foo <bar@baz.com>"
+                $recipient_name = '';
+                if( preg_match( '/(.*)<(.+)>/', $recipient, $matches ) ) {
+                    if ( count( $matches ) == 3 ) {
+                        $recipient_name = $matches[1];
+                        $recipient = $matches[2];
+                    }
+                }
+                $phpmailer->AddCc( $recipient, $recipient_name );
+            } catch ( phpmailerException $e ) {
+                continue;
+            }
 		}
 	}
 
 	if ( !empty( $bcc ) ) {
 		foreach ( (array) $bcc as $recipient) {
-			$phpmailer->AddBcc( trim($recipient) );
+			try {
+                // Break $recipient into name and address parts if in the format "Foo <bar@baz.com>"
+                $recipient_name = '';
+                if( preg_match( '/(.*)<(.+)>/', $recipient, $matches ) ) {
+                    if ( count( $matches ) == 3 ) {
+                        $recipient_name = $matches[1];
+                        $recipient = $matches[2];
+                    }
+                }
+                $phpmailer->AddBcc( $recipient, $recipient_name );
+            } catch ( phpmailerException $e ) {
+                continue;
+            }
 		}
 	}
 
@@ -185,14 +220,22 @@
 
 	if ( !empty( $attachments ) ) {
 		foreach ( $attachments as $attachment ) {
-			$phpmailer->AddAttachment($attachment);
+			try {
+                $phpmailer->AddAttachment($attachment);
+            } catch ( phpmailerException $e ) {
+                continue;
+            }
 		}
 	}
 
 	do_action_ref_array( 'phpmailer_init', array( &$phpmailer ) );
 
 	// Send!
-	$result = @$phpmailer->Send();
+    try {
+        $phpmailer->Send();
+    } catch ( phpmailerException $e ) {
+        return false;
+    }
 
-	return $result;
+	return true;
 ?>
