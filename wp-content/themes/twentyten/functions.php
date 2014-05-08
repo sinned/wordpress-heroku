@@ -115,9 +115,9 @@ function twentyten_setup() {
 		// Callback for styling the header preview in the admin.
 		'admin-head-callback' => 'twentyten_admin_header_style',
 	);
-	
+
 	add_theme_support( 'custom-header', $custom_header_support );
-	
+
 	if ( ! function_exists( 'get_custom_header' ) ) {
 		// This is all for compatibility with versions of WordPress prior to 3.4.
 		define( 'HEADER_TEXTCOLOR', '' );
@@ -200,7 +200,7 @@ if ( ! function_exists( 'twentyten_admin_header_style' ) ) :
  */
 function twentyten_admin_header_style() {
 ?>
-<style type="text/css">
+<style type="text/css" id="twentyten-admin-header-css">
 /* Shows the same border as on front end */
 #headimg {
 	border-bottom: 1px solid #000;
@@ -224,7 +224,8 @@ endif;
  * @since Twenty Ten 1.0
  */
 function twentyten_page_menu_args( $args ) {
-	$args['show_home'] = true;
+	if ( ! isset( $args['show_home'] ) )
+		$args['show_home'] = true;
 	return $args;
 }
 add_filter( 'wp_page_menu_args', 'twentyten_page_menu_args' );
@@ -243,6 +244,7 @@ function twentyten_excerpt_length( $length ) {
 }
 add_filter( 'excerpt_length', 'twentyten_excerpt_length' );
 
+if ( ! function_exists( 'twentyten_continue_reading_link' ) ) :
 /**
  * Returns a "Continue Reading" link for excerpts
  *
@@ -252,6 +254,7 @@ add_filter( 'excerpt_length', 'twentyten_excerpt_length' );
 function twentyten_continue_reading_link() {
 	return ' <a href="'. get_permalink() . '">' . __( 'Continue reading <span class="meta-nav">&rarr;</span>', 'twentyten' ) . '</a>';
 }
+endif;
 
 /**
  * Replaces "[...]" (appended to automatically generated excerpts) with an ellipsis and twentyten_continue_reading_link().
@@ -330,28 +333,28 @@ function twentyten_comment( $comment, $args, $depth ) {
 	?>
 	<li <?php comment_class(); ?> id="li-comment-<?php comment_ID(); ?>">
 		<div id="comment-<?php comment_ID(); ?>">
-		<div class="comment-author vcard">
-			<?php echo get_avatar( $comment, 40 ); ?>
-			<?php printf( __( '%s <span class="says">says:</span>', 'twentyten' ), sprintf( '<cite class="fn">%s</cite>', get_comment_author_link() ) ); ?>
-		</div><!-- .comment-author .vcard -->
-		<?php if ( $comment->comment_approved == '0' ) : ?>
-			<em class="comment-awaiting-moderation"><?php _e( 'Your comment is awaiting moderation.', 'twentyten' ); ?></em>
-			<br />
-		<?php endif; ?>
+			<div class="comment-author vcard">
+				<?php echo get_avatar( $comment, 40 ); ?>
+				<?php printf( __( '%s <span class="says">says:</span>', 'twentyten' ), sprintf( '<cite class="fn">%s</cite>', get_comment_author_link() ) ); ?>
+			</div><!-- .comment-author .vcard -->
+			<?php if ( $comment->comment_approved == '0' ) : ?>
+				<em class="comment-awaiting-moderation"><?php _e( 'Your comment is awaiting moderation.', 'twentyten' ); ?></em>
+				<br />
+			<?php endif; ?>
 
-		<div class="comment-meta commentmetadata"><a href="<?php echo esc_url( get_comment_link( $comment->comment_ID ) ); ?>">
-			<?php
-				/* translators: 1: date, 2: time */
-				printf( __( '%1$s at %2$s', 'twentyten' ), get_comment_date(),  get_comment_time() ); ?></a><?php edit_comment_link( __( '(Edit)', 'twentyten' ), ' ' );
-			?>
-		</div><!-- .comment-meta .commentmetadata -->
+			<div class="comment-meta commentmetadata"><a href="<?php echo esc_url( get_comment_link( $comment->comment_ID ) ); ?>">
+				<?php
+					/* translators: 1: date, 2: time */
+					printf( __( '%1$s at %2$s', 'twentyten' ), get_comment_date(),  get_comment_time() ); ?></a><?php edit_comment_link( __( '(Edit)', 'twentyten' ), ' ' );
+				?>
+			</div><!-- .comment-meta .commentmetadata -->
 
-		<div class="comment-body"><?php comment_text(); ?></div>
+			<div class="comment-body"><?php comment_text(); ?></div>
 
-		<div class="reply">
-			<?php comment_reply_link( array_merge( $args, array( 'depth' => $depth, 'max_depth' => $args['max_depth'] ) ) ); ?>
-		</div><!-- .reply -->
-	</div><!-- #comment-##  -->
+			<div class="reply">
+				<?php comment_reply_link( array_merge( $args, array( 'depth' => $depth, 'max_depth' => $args['max_depth'] ) ) ); ?>
+			</div><!-- .reply -->
+		</div><!-- #comment-##  -->
 
 	<?php
 			break;
@@ -380,7 +383,7 @@ function twentyten_widgets_init() {
 	register_sidebar( array(
 		'name' => __( 'Primary Widget Area', 'twentyten' ),
 		'id' => 'primary-widget-area',
-		'description' => __( 'The primary widget area', 'twentyten' ),
+		'description' => __( 'Add widgets here to appear in your sidebar.', 'twentyten' ),
 		'before_widget' => '<li id="%1$s" class="widget-container %2$s">',
 		'after_widget' => '</li>',
 		'before_title' => '<h3 class="widget-title">',
@@ -391,7 +394,7 @@ function twentyten_widgets_init() {
 	register_sidebar( array(
 		'name' => __( 'Secondary Widget Area', 'twentyten' ),
 		'id' => 'secondary-widget-area',
-		'description' => __( 'The secondary widget area', 'twentyten' ),
+		'description' => __( 'An optional secondary widget area, displays below the primary widget area in your sidebar.', 'twentyten' ),
 		'before_widget' => '<li id="%1$s" class="widget-container %2$s">',
 		'after_widget' => '</li>',
 		'before_title' => '<h3 class="widget-title">',
@@ -402,7 +405,7 @@ function twentyten_widgets_init() {
 	register_sidebar( array(
 		'name' => __( 'First Footer Widget Area', 'twentyten' ),
 		'id' => 'first-footer-widget-area',
-		'description' => __( 'The first footer widget area', 'twentyten' ),
+		'description' => __( 'An optional widget area for your site footer.', 'twentyten' ),
 		'before_widget' => '<li id="%1$s" class="widget-container %2$s">',
 		'after_widget' => '</li>',
 		'before_title' => '<h3 class="widget-title">',
@@ -413,7 +416,7 @@ function twentyten_widgets_init() {
 	register_sidebar( array(
 		'name' => __( 'Second Footer Widget Area', 'twentyten' ),
 		'id' => 'second-footer-widget-area',
-		'description' => __( 'The second footer widget area', 'twentyten' ),
+		'description' => __( 'An optional widget area for your site footer.', 'twentyten' ),
 		'before_widget' => '<li id="%1$s" class="widget-container %2$s">',
 		'after_widget' => '</li>',
 		'before_title' => '<h3 class="widget-title">',
@@ -424,7 +427,7 @@ function twentyten_widgets_init() {
 	register_sidebar( array(
 		'name' => __( 'Third Footer Widget Area', 'twentyten' ),
 		'id' => 'third-footer-widget-area',
-		'description' => __( 'The third footer widget area', 'twentyten' ),
+		'description' => __( 'An optional widget area for your site footer.', 'twentyten' ),
 		'before_widget' => '<li id="%1$s" class="widget-container %2$s">',
 		'after_widget' => '</li>',
 		'before_title' => '<h3 class="widget-title">',
@@ -435,7 +438,7 @@ function twentyten_widgets_init() {
 	register_sidebar( array(
 		'name' => __( 'Fourth Footer Widget Area', 'twentyten' ),
 		'id' => 'fourth-footer-widget-area',
-		'description' => __( 'The fourth footer widget area', 'twentyten' ),
+		'description' => __( 'An optional widget area for your site footer.', 'twentyten' ),
 		'before_widget' => '<li id="%1$s" class="widget-container %2$s">',
 		'after_widget' => '</li>',
 		'before_title' => '<h3 class="widget-title">',
@@ -511,3 +514,43 @@ function twentyten_posted_in() {
 	);
 }
 endif;
+
+/**
+ * Retrieves the IDs for images in a gallery.
+ *
+ * @uses get_post_galleries() first, if available. Falls back to shortcode parsing,
+ * then as last option uses a get_posts() call.
+ *
+ * @since Twenty Ten 1.6.
+ *
+ * @return array List of image IDs from the post gallery.
+ */
+function twentyten_get_gallery_images() {
+	$images = array();
+
+	if ( function_exists( 'get_post_galleries' ) ) {
+		$galleries = get_post_galleries( get_the_ID(), false );
+		if ( isset( $galleries[0]['ids'] ) )
+		 	$images = explode( ',', $galleries[0]['ids'] );
+	} else {
+		$pattern = get_shortcode_regex();
+		preg_match( "/$pattern/s", get_the_content(), $match );
+		$atts = shortcode_parse_atts( $match[3] );
+		if ( isset( $atts['ids'] ) )
+			$images = explode( ',', $atts['ids'] );
+	}
+
+	if ( ! $images ) {
+		$images = get_posts( array(
+			'fields'         => 'ids',
+			'numberposts'    => 999,
+			'order'          => 'ASC',
+			'orderby'        => 'menu_order',
+			'post_mime_type' => 'image',
+			'post_parent'    => get_the_ID(),
+			'post_type'      => 'attachment',
+		) );
+	}
+
+	return $images;
+}
