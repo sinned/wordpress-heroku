@@ -42,10 +42,20 @@ return array (
             'https' => true,
             'hostname' => 'glacier.eu-west-1.amazonaws.com',
         ),
+        'ap-southeast-2' => array(
+            'http' => true,
+            'https' => true,
+            'hostname' => 'glacier.ap-southeast-2.amazonaws.com',
+        ),
         'ap-northeast-1' => array(
             'http' => true,
             'https' => true,
             'hostname' => 'glacier.ap-northeast-1.amazonaws.com',
+        ),
+        'cn-north-1' => array(
+            'http' => true,
+            'https' => true,
+            'hostname' => 'glacier.cn-north-1.amazonaws.com.cn',
         ),
     ),
     'operations' => array(
@@ -375,6 +385,34 @@ return array (
                 ),
             ),
         ),
+        'GetDataRetrievalPolicy' => array(
+            'httpMethod' => 'GET',
+            'uri' => '/{accountId}/policies/data-retrieval',
+            'class' => 'Guzzle\\Service\\Command\\OperationCommand',
+            'responseClass' => 'GetDataRetrievalPolicyOutput',
+            'responseType' => 'model',
+            'parameters' => array(
+                'accountId' => array(
+                    'required' => true,
+                    'type' => 'string',
+                    'location' => 'uri',
+                ),
+            ),
+            'errorResponses' => array(
+                array(
+                    'reason' => 'Returned if a parameter of the request is incorrectly specified.',
+                    'class' => 'InvalidParameterValueException',
+                ),
+                array(
+                    'reason' => 'Returned if a required header or parameter is missing from the request.',
+                    'class' => 'MissingParameterValueException',
+                ),
+                array(
+                    'reason' => 'Returned if the service cannot complete the request.',
+                    'class' => 'ServiceUnavailableException',
+                ),
+            ),
+        ),
         'GetJobOutput' => array(
             'httpMethod' => 'GET',
             'uri' => '/{accountId}/vaults/{vaultName}/jobs/{jobId}/output',
@@ -503,11 +541,33 @@ return array (
                     'type' => 'string',
                     'location' => 'json',
                 ),
+                'InventoryRetrievalParameters' => array(
+                    'type' => 'object',
+                    'location' => 'json',
+                    'properties' => array(
+                        'StartDate' => array(
+                            'type' => 'string',
+                        ),
+                        'EndDate' => array(
+                            'type' => 'string',
+                        ),
+                        'Limit' => array(
+                            'type' => 'string',
+                        ),
+                        'Marker' => array(
+                            'type' => 'string',
+                        ),
+                    ),
+                ),
             ),
             'errorResponses' => array(
                 array(
                     'reason' => 'Returned if the specified resource, such as a vault, upload ID, or job ID, does not exist.',
                     'class' => 'ResourceNotFoundException',
+                ),
+                array(
+                    'reason' => 'Returned if a retrieval job would exceed the current data policy\'s retrieval rate limit. For more information about data retrieval policies,',
+                    'class' => 'PolicyEnforcedException',
                 ),
                 array(
                     'reason' => 'Returned if a parameter of the request is incorrectly specified.',
@@ -744,6 +804,55 @@ return array (
                     'reason' => 'Returned if the specified resource, such as a vault, upload ID, or job ID, does not exist.',
                     'class' => 'ResourceNotFoundException',
                 ),
+                array(
+                    'reason' => 'Returned if a parameter of the request is incorrectly specified.',
+                    'class' => 'InvalidParameterValueException',
+                ),
+                array(
+                    'reason' => 'Returned if a required header or parameter is missing from the request.',
+                    'class' => 'MissingParameterValueException',
+                ),
+                array(
+                    'reason' => 'Returned if the service cannot complete the request.',
+                    'class' => 'ServiceUnavailableException',
+                ),
+            ),
+        ),
+        'SetDataRetrievalPolicy' => array(
+            'httpMethod' => 'PUT',
+            'uri' => '/{accountId}/policies/data-retrieval',
+            'class' => 'Guzzle\\Service\\Command\\OperationCommand',
+            'responseClass' => 'EmptyOutput',
+            'responseType' => 'model',
+            'parameters' => array(
+                'accountId' => array(
+                    'required' => true,
+                    'type' => 'string',
+                    'location' => 'uri',
+                ),
+                'Policy' => array(
+                    'type' => 'object',
+                    'location' => 'json',
+                    'properties' => array(
+                        'Rules' => array(
+                            'type' => 'array',
+                            'items' => array(
+                                'name' => 'DataRetrievalRule',
+                                'type' => 'object',
+                                'properties' => array(
+                                    'Strategy' => array(
+                                        'type' => 'string',
+                                    ),
+                                    'BytesPerHour' => array(
+                                        'type' => 'numeric',
+                                    ),
+                                ),
+                            ),
+                        ),
+                    ),
+                ),
+            ),
+            'errorResponses' => array(
                 array(
                     'reason' => 'Returned if a parameter of the request is incorrectly specified.',
                     'class' => 'InvalidParameterValueException',
@@ -1040,6 +1149,27 @@ return array (
                     'type' => 'string',
                     'location' => 'json',
                 ),
+                'InventoryRetrievalParameters' => array(
+                    'type' => 'object',
+                    'location' => 'json',
+                    'properties' => array(
+                        'Format' => array(
+                            'type' => 'string',
+                        ),
+                        'StartDate' => array(
+                            'type' => 'string',
+                        ),
+                        'EndDate' => array(
+                            'type' => 'string',
+                        ),
+                        'Limit' => array(
+                            'type' => 'string',
+                        ),
+                        'Marker' => array(
+                            'type' => 'string',
+                        ),
+                    ),
+                ),
             ),
         ),
         'DescribeVaultOutput' => array(
@@ -1069,6 +1199,33 @@ return array (
                 'SizeInBytes' => array(
                     'type' => 'numeric',
                     'location' => 'json',
+                ),
+            ),
+        ),
+        'GetDataRetrievalPolicyOutput' => array(
+            'type' => 'object',
+            'additionalProperties' => true,
+            'properties' => array(
+                'Policy' => array(
+                    'type' => 'object',
+                    'location' => 'json',
+                    'properties' => array(
+                        'Rules' => array(
+                            'type' => 'array',
+                            'items' => array(
+                                'name' => 'DataRetrievalRule',
+                                'type' => 'object',
+                                'properties' => array(
+                                    'Strategy' => array(
+                                        'type' => 'string',
+                                    ),
+                                    'BytesPerHour' => array(
+                                        'type' => 'numeric',
+                                    ),
+                                ),
+                            ),
+                        ),
+                    ),
                 ),
             ),
         ),
@@ -1221,6 +1378,26 @@ return array (
                             'RetrievalByteRange' => array(
                                 'type' => 'string',
                             ),
+                            'InventoryRetrievalParameters' => array(
+                                'type' => 'object',
+                                'properties' => array(
+                                    'Format' => array(
+                                        'type' => 'string',
+                                    ),
+                                    'StartDate' => array(
+                                        'type' => 'string',
+                                    ),
+                                    'EndDate' => array(
+                                        'type' => 'string',
+                                    ),
+                                    'Limit' => array(
+                                        'type' => 'string',
+                                    ),
+                                    'Marker' => array(
+                                        'type' => 'string',
+                                    ),
+                                ),
+                            ),
                         ),
                     ),
                 ),
@@ -1359,6 +1536,32 @@ return array (
                     'sentAs' => 'x-amz-sha256-tree-hash',
                 ),
             ),
+        ),
+    ),
+    'iterators' => array(
+        'ListJobs' => array(
+            'input_token' => 'marker',
+            'output_token' => 'Marker',
+            'limit_key' => 'limit',
+            'result_key' => 'JobList',
+        ),
+        'ListMultipartUploads' => array(
+            'input_token' => 'marker',
+            'output_token' => 'Marker',
+            'limit_key' => 'limit',
+            'result_key' => 'UploadsList',
+        ),
+        'ListParts' => array(
+            'input_token' => 'marker',
+            'output_token' => 'Marker',
+            'limit_key' => 'limit',
+            'result_key' => 'Parts',
+        ),
+        'ListVaults' => array(
+            'input_token' => 'marker',
+            'output_token' => 'Marker',
+            'limit_key' => 'limit',
+            'result_key' => 'VaultList',
         ),
     ),
     'waiters' => array(

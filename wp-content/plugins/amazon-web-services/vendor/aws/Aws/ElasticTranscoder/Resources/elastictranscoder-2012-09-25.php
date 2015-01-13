@@ -52,16 +52,6 @@ return array (
             'https' => true,
             'hostname' => 'elastictranscoder.ap-southeast-1.amazonaws.com',
         ),
-        'ap-southeast-2' => array(
-            'http' => false,
-            'https' => true,
-            'hostname' => 'elastictranscoder.ap-southeast-2.amazonaws.com',
-        ),
-        'sa-east-1' => array(
-            'http' => false,
-            'https' => true,
-            'hostname' => 'elastictranscoder.sa-east-1.amazonaws.com',
-        ),
     ),
     'operations' => array(
         'CancelJob' => array(
@@ -111,10 +101,12 @@ return array (
             'responseType' => 'model',
             'parameters' => array(
                 'PipelineId' => array(
+                    'required' => true,
                     'type' => 'string',
                     'location' => 'json',
                 ),
                 'Input' => array(
+                    'required' => true,
                     'type' => 'object',
                     'location' => 'json',
                     'properties' => array(
@@ -138,6 +130,25 @@ return array (
                         'Container' => array(
                             'type' => 'string',
                         ),
+                        'Encryption' => array(
+                            'type' => 'object',
+                            'properties' => array(
+                                'Mode' => array(
+                                    'type' => 'string',
+                                ),
+                                'Key' => array(
+                                    'type' => 'string',
+                                ),
+                                'KeyMd5' => array(
+                                    'type' => 'string',
+                                ),
+                                'InitializationVector' => array(
+                                    'type' => 'string',
+                                    'minLength' => 1,
+                                    'maxLength' => 255,
+                                ),
+                            ),
+                        ),
                     ),
                 ),
                 'Output' => array(
@@ -151,6 +162,25 @@ return array (
                         ),
                         'ThumbnailPattern' => array(
                             'type' => 'string',
+                        ),
+                        'ThumbnailEncryption' => array(
+                            'type' => 'object',
+                            'properties' => array(
+                                'Mode' => array(
+                                    'type' => 'string',
+                                ),
+                                'Key' => array(
+                                    'type' => 'string',
+                                ),
+                                'KeyMd5' => array(
+                                    'type' => 'string',
+                                ),
+                                'InitializationVector' => array(
+                                    'type' => 'string',
+                                    'minLength' => 1,
+                                    'maxLength' => 255,
+                                ),
+                            ),
                         ),
                         'Rotate' => array(
                             'type' => 'string',
@@ -177,6 +207,210 @@ return array (
                                         'minLength' => 1,
                                         'maxLength' => 255,
                                     ),
+                                    'Encryption' => array(
+                                        'type' => 'object',
+                                        'properties' => array(
+                                            'Mode' => array(
+                                                'type' => 'string',
+                                            ),
+                                            'Key' => array(
+                                                'type' => 'string',
+                                            ),
+                                            'KeyMd5' => array(
+                                                'type' => 'string',
+                                            ),
+                                            'InitializationVector' => array(
+                                                'type' => 'string',
+                                                'minLength' => 1,
+                                                'maxLength' => 255,
+                                            ),
+                                        ),
+                                    ),
+                                ),
+                            ),
+                        ),
+                        'AlbumArt' => array(
+                            'type' => 'object',
+                            'properties' => array(
+                                'MergePolicy' => array(
+                                    'type' => 'string',
+                                ),
+                                'Artwork' => array(
+                                    'type' => 'array',
+                                    'items' => array(
+                                        'name' => 'Artwork',
+                                        'type' => 'object',
+                                        'properties' => array(
+                                            'InputKey' => array(
+                                                'type' => 'string',
+                                                'minLength' => 1,
+                                                'maxLength' => 255,
+                                            ),
+                                            'MaxWidth' => array(
+                                                'type' => 'string',
+                                            ),
+                                            'MaxHeight' => array(
+                                                'type' => 'string',
+                                            ),
+                                            'SizingPolicy' => array(
+                                                'type' => 'string',
+                                            ),
+                                            'PaddingPolicy' => array(
+                                                'type' => 'string',
+                                            ),
+                                            'AlbumArtFormat' => array(
+                                                'type' => 'string',
+                                            ),
+                                            'Encryption' => array(
+                                                'type' => 'object',
+                                                'properties' => array(
+                                                    'Mode' => array(
+                                                        'type' => 'string',
+                                                    ),
+                                                    'Key' => array(
+                                                        'type' => 'string',
+                                                    ),
+                                                    'KeyMd5' => array(
+                                                        'type' => 'string',
+                                                    ),
+                                                    'InitializationVector' => array(
+                                                        'type' => 'string',
+                                                        'minLength' => 1,
+                                                        'maxLength' => 255,
+                                                    ),
+                                                ),
+                                            ),
+                                        ),
+                                    ),
+                                ),
+                            ),
+                        ),
+                        'Composition' => array(
+                            'type' => 'array',
+                            'items' => array(
+                                'name' => 'Clip',
+                                'type' => 'object',
+                                'properties' => array(
+                                    'TimeSpan' => array(
+                                        'type' => 'object',
+                                        'properties' => array(
+                                            'StartTime' => array(
+                                                'type' => 'string',
+                                            ),
+                                            'Duration' => array(
+                                                'type' => 'string',
+                                            ),
+                                        ),
+                                    ),
+                                ),
+                            ),
+                        ),
+                        'Captions' => array(
+                            'type' => 'object',
+                            'properties' => array(
+                                'MergePolicy' => array(
+                                    'type' => 'string',
+                                ),
+                                'CaptionSources' => array(
+                                    'type' => 'array',
+                                    'maxItems' => 20,
+                                    'items' => array(
+                                        'name' => 'CaptionSource',
+                                        'type' => 'object',
+                                        'properties' => array(
+                                            'Key' => array(
+                                                'type' => 'string',
+                                                'minLength' => 1,
+                                                'maxLength' => 255,
+                                            ),
+                                            'Language' => array(
+                                                'type' => 'string',
+                                                'minLength' => 1,
+                                                'maxLength' => 255,
+                                            ),
+                                            'TimeOffset' => array(
+                                                'type' => 'string',
+                                            ),
+                                            'Label' => array(
+                                                'type' => 'string',
+                                                'minLength' => 1,
+                                                'maxLength' => 40,
+                                            ),
+                                            'Encryption' => array(
+                                                'type' => 'object',
+                                                'properties' => array(
+                                                    'Mode' => array(
+                                                        'type' => 'string',
+                                                    ),
+                                                    'Key' => array(
+                                                        'type' => 'string',
+                                                    ),
+                                                    'KeyMd5' => array(
+                                                        'type' => 'string',
+                                                    ),
+                                                    'InitializationVector' => array(
+                                                        'type' => 'string',
+                                                        'minLength' => 1,
+                                                        'maxLength' => 255,
+                                                    ),
+                                                ),
+                                            ),
+                                        ),
+                                    ),
+                                ),
+                                'CaptionFormats' => array(
+                                    'type' => 'array',
+                                    'maxItems' => 4,
+                                    'items' => array(
+                                        'name' => 'CaptionFormat',
+                                        'type' => 'object',
+                                        'properties' => array(
+                                            'Format' => array(
+                                                'type' => 'string',
+                                            ),
+                                            'Pattern' => array(
+                                                'type' => 'string',
+                                            ),
+                                            'Encryption' => array(
+                                                'type' => 'object',
+                                                'properties' => array(
+                                                    'Mode' => array(
+                                                        'type' => 'string',
+                                                    ),
+                                                    'Key' => array(
+                                                        'type' => 'string',
+                                                    ),
+                                                    'KeyMd5' => array(
+                                                        'type' => 'string',
+                                                    ),
+                                                    'InitializationVector' => array(
+                                                        'type' => 'string',
+                                                        'minLength' => 1,
+                                                        'maxLength' => 255,
+                                                    ),
+                                                ),
+                                            ),
+                                        ),
+                                    ),
+                                ),
+                            ),
+                        ),
+                        'Encryption' => array(
+                            'type' => 'object',
+                            'properties' => array(
+                                'Mode' => array(
+                                    'type' => 'string',
+                                ),
+                                'Key' => array(
+                                    'type' => 'string',
+                                ),
+                                'KeyMd5' => array(
+                                    'type' => 'string',
+                                ),
+                                'InitializationVector' => array(
+                                    'type' => 'string',
+                                    'minLength' => 1,
+                                    'maxLength' => 255,
                                 ),
                             ),
                         ),
@@ -197,6 +431,25 @@ return array (
                             ),
                             'ThumbnailPattern' => array(
                                 'type' => 'string',
+                            ),
+                            'ThumbnailEncryption' => array(
+                                'type' => 'object',
+                                'properties' => array(
+                                    'Mode' => array(
+                                        'type' => 'string',
+                                    ),
+                                    'Key' => array(
+                                        'type' => 'string',
+                                    ),
+                                    'KeyMd5' => array(
+                                        'type' => 'string',
+                                    ),
+                                    'InitializationVector' => array(
+                                        'type' => 'string',
+                                        'minLength' => 1,
+                                        'maxLength' => 255,
+                                    ),
+                                ),
                             ),
                             'Rotate' => array(
                                 'type' => 'string',
@@ -223,6 +476,210 @@ return array (
                                             'minLength' => 1,
                                             'maxLength' => 255,
                                         ),
+                                        'Encryption' => array(
+                                            'type' => 'object',
+                                            'properties' => array(
+                                                'Mode' => array(
+                                                    'type' => 'string',
+                                                ),
+                                                'Key' => array(
+                                                    'type' => 'string',
+                                                ),
+                                                'KeyMd5' => array(
+                                                    'type' => 'string',
+                                                ),
+                                                'InitializationVector' => array(
+                                                    'type' => 'string',
+                                                    'minLength' => 1,
+                                                    'maxLength' => 255,
+                                                ),
+                                            ),
+                                        ),
+                                    ),
+                                ),
+                            ),
+                            'AlbumArt' => array(
+                                'type' => 'object',
+                                'properties' => array(
+                                    'MergePolicy' => array(
+                                        'type' => 'string',
+                                    ),
+                                    'Artwork' => array(
+                                        'type' => 'array',
+                                        'items' => array(
+                                            'name' => 'Artwork',
+                                            'type' => 'object',
+                                            'properties' => array(
+                                                'InputKey' => array(
+                                                    'type' => 'string',
+                                                    'minLength' => 1,
+                                                    'maxLength' => 255,
+                                                ),
+                                                'MaxWidth' => array(
+                                                    'type' => 'string',
+                                                ),
+                                                'MaxHeight' => array(
+                                                    'type' => 'string',
+                                                ),
+                                                'SizingPolicy' => array(
+                                                    'type' => 'string',
+                                                ),
+                                                'PaddingPolicy' => array(
+                                                    'type' => 'string',
+                                                ),
+                                                'AlbumArtFormat' => array(
+                                                    'type' => 'string',
+                                                ),
+                                                'Encryption' => array(
+                                                    'type' => 'object',
+                                                    'properties' => array(
+                                                        'Mode' => array(
+                                                            'type' => 'string',
+                                                        ),
+                                                        'Key' => array(
+                                                            'type' => 'string',
+                                                        ),
+                                                        'KeyMd5' => array(
+                                                            'type' => 'string',
+                                                        ),
+                                                        'InitializationVector' => array(
+                                                            'type' => 'string',
+                                                            'minLength' => 1,
+                                                            'maxLength' => 255,
+                                                        ),
+                                                    ),
+                                                ),
+                                            ),
+                                        ),
+                                    ),
+                                ),
+                            ),
+                            'Composition' => array(
+                                'type' => 'array',
+                                'items' => array(
+                                    'name' => 'Clip',
+                                    'type' => 'object',
+                                    'properties' => array(
+                                        'TimeSpan' => array(
+                                            'type' => 'object',
+                                            'properties' => array(
+                                                'StartTime' => array(
+                                                    'type' => 'string',
+                                                ),
+                                                'Duration' => array(
+                                                    'type' => 'string',
+                                                ),
+                                            ),
+                                        ),
+                                    ),
+                                ),
+                            ),
+                            'Captions' => array(
+                                'type' => 'object',
+                                'properties' => array(
+                                    'MergePolicy' => array(
+                                        'type' => 'string',
+                                    ),
+                                    'CaptionSources' => array(
+                                        'type' => 'array',
+                                        'maxItems' => 20,
+                                        'items' => array(
+                                            'name' => 'CaptionSource',
+                                            'type' => 'object',
+                                            'properties' => array(
+                                                'Key' => array(
+                                                    'type' => 'string',
+                                                    'minLength' => 1,
+                                                    'maxLength' => 255,
+                                                ),
+                                                'Language' => array(
+                                                    'type' => 'string',
+                                                    'minLength' => 1,
+                                                    'maxLength' => 255,
+                                                ),
+                                                'TimeOffset' => array(
+                                                    'type' => 'string',
+                                                ),
+                                                'Label' => array(
+                                                    'type' => 'string',
+                                                    'minLength' => 1,
+                                                    'maxLength' => 40,
+                                                ),
+                                                'Encryption' => array(
+                                                    'type' => 'object',
+                                                    'properties' => array(
+                                                        'Mode' => array(
+                                                            'type' => 'string',
+                                                        ),
+                                                        'Key' => array(
+                                                            'type' => 'string',
+                                                        ),
+                                                        'KeyMd5' => array(
+                                                            'type' => 'string',
+                                                        ),
+                                                        'InitializationVector' => array(
+                                                            'type' => 'string',
+                                                            'minLength' => 1,
+                                                            'maxLength' => 255,
+                                                        ),
+                                                    ),
+                                                ),
+                                            ),
+                                        ),
+                                    ),
+                                    'CaptionFormats' => array(
+                                        'type' => 'array',
+                                        'maxItems' => 4,
+                                        'items' => array(
+                                            'name' => 'CaptionFormat',
+                                            'type' => 'object',
+                                            'properties' => array(
+                                                'Format' => array(
+                                                    'type' => 'string',
+                                                ),
+                                                'Pattern' => array(
+                                                    'type' => 'string',
+                                                ),
+                                                'Encryption' => array(
+                                                    'type' => 'object',
+                                                    'properties' => array(
+                                                        'Mode' => array(
+                                                            'type' => 'string',
+                                                        ),
+                                                        'Key' => array(
+                                                            'type' => 'string',
+                                                        ),
+                                                        'KeyMd5' => array(
+                                                            'type' => 'string',
+                                                        ),
+                                                        'InitializationVector' => array(
+                                                            'type' => 'string',
+                                                            'minLength' => 1,
+                                                            'maxLength' => 255,
+                                                        ),
+                                                    ),
+                                                ),
+                                            ),
+                                        ),
+                                    ),
+                                ),
+                            ),
+                            'Encryption' => array(
+                                'type' => 'object',
+                                'properties' => array(
+                                    'Mode' => array(
+                                        'type' => 'string',
+                                    ),
+                                    'Key' => array(
+                                        'type' => 'string',
+                                    ),
+                                    'KeyMd5' => array(
+                                        'type' => 'string',
+                                    ),
+                                    'InitializationVector' => array(
+                                        'type' => 'string',
+                                        'minLength' => 1,
+                                        'maxLength' => 255,
                                     ),
                                 ),
                             ),
@@ -264,6 +721,16 @@ return array (
                         ),
                     ),
                 ),
+                'UserMetadata' => array(
+                    'type' => 'object',
+                    'location' => 'json',
+                    'additionalProperties' => array(
+                        'type' => 'string',
+                        'data' => array(
+                            'shape_name' => 'String',
+                        ),
+                    ),
+                ),
             ),
             'errorResponses' => array(
                 array(
@@ -299,12 +766,14 @@ return array (
             'responseType' => 'model',
             'parameters' => array(
                 'Name' => array(
+                    'required' => true,
                     'type' => 'string',
                     'location' => 'json',
                     'minLength' => 1,
                     'maxLength' => 40,
                 ),
                 'InputBucket' => array(
+                    'required' => true,
                     'type' => 'string',
                     'location' => 'json',
                 ),
@@ -313,8 +782,14 @@ return array (
                     'location' => 'json',
                 ),
                 'Role' => array(
+                    'required' => true,
                     'type' => 'string',
                     'location' => 'json',
+                ),
+                'AwsKmsKeyArn' => array(
+                    'type' => 'string',
+                    'location' => 'json',
+                    'maxLength' => 255,
                 ),
                 'Notifications' => array(
                     'type' => 'object',
@@ -445,6 +920,7 @@ return array (
             'responseType' => 'model',
             'parameters' => array(
                 'Name' => array(
+                    'required' => true,
                     'type' => 'string',
                     'location' => 'json',
                     'minLength' => 1,
@@ -456,6 +932,7 @@ return array (
                     'maxLength' => 255,
                 ),
                 'Container' => array(
+                    'required' => true,
                     'type' => 'string',
                     'location' => 'json',
                 ),
@@ -571,6 +1048,14 @@ return array (
                         ),
                         'Channels' => array(
                             'type' => 'string',
+                        ),
+                        'CodecOptions' => array(
+                            'type' => 'object',
+                            'properties' => array(
+                                'Profile' => array(
+                                    'type' => 'string',
+                                ),
+                            ),
                         ),
                     ),
                 ),
@@ -793,6 +1278,16 @@ return array (
             'class' => 'Guzzle\\Service\\Command\\OperationCommand',
             'responseClass' => 'ListPipelinesResponse',
             'responseType' => 'model',
+            'parameters' => array(
+                'Ascending' => array(
+                    'type' => 'string',
+                    'location' => 'query',
+                ),
+                'PageToken' => array(
+                    'type' => 'string',
+                    'location' => 'query',
+                ),
+            ),
             'errorResponses' => array(
                 array(
                     'reason' => 'One or more required parameter values were not provided in the request.',
@@ -809,8 +1304,6 @@ return array (
                     'reason' => 'Elastic Transcoder encountered an unexpected exception while trying to fulfill the request.',
                     'class' => 'InternalServiceException',
                 ),
-            ),
-            'parameters' => array(
             ),
         ),
         'ListPresets' => array(
@@ -819,6 +1312,16 @@ return array (
             'class' => 'Guzzle\\Service\\Command\\OperationCommand',
             'responseClass' => 'ListPresetsResponse',
             'responseType' => 'model',
+            'parameters' => array(
+                'Ascending' => array(
+                    'type' => 'string',
+                    'location' => 'query',
+                ),
+                'PageToken' => array(
+                    'type' => 'string',
+                    'location' => 'query',
+                ),
+            ),
             'errorResponses' => array(
                 array(
                     'reason' => 'One or more required parameter values were not provided in the request.',
@@ -835,8 +1338,6 @@ return array (
                     'reason' => 'Elastic Transcoder encountered an unexpected exception while trying to fulfill the request.',
                     'class' => 'InternalServiceException',
                 ),
-            ),
-            'parameters' => array(
             ),
         ),
         'ReadJob' => array(
@@ -952,18 +1453,22 @@ return array (
             'responseType' => 'model',
             'parameters' => array(
                 'Role' => array(
+                    'required' => true,
                     'type' => 'string',
                     'location' => 'json',
                 ),
                 'InputBucket' => array(
+                    'required' => true,
                     'type' => 'string',
                     'location' => 'json',
                 ),
                 'OutputBucket' => array(
+                    'required' => true,
                     'type' => 'string',
                     'location' => 'json',
                 ),
                 'Topics' => array(
+                    'required' => true,
                     'type' => 'array',
                     'location' => 'json',
                     'maxItems' => 30,
@@ -1020,6 +1525,11 @@ return array (
                 'Role' => array(
                     'type' => 'string',
                     'location' => 'json',
+                ),
+                'AwsKmsKeyArn' => array(
+                    'type' => 'string',
+                    'location' => 'json',
+                    'maxLength' => 255,
                 ),
                 'Notifications' => array(
                     'type' => 'object',
@@ -1155,6 +1665,7 @@ return array (
                     'location' => 'uri',
                 ),
                 'Notifications' => array(
+                    'required' => true,
                     'type' => 'object',
                     'location' => 'json',
                     'properties' => array(
@@ -1212,6 +1723,7 @@ return array (
                     'location' => 'uri',
                 ),
                 'Status' => array(
+                    'required' => true,
                     'type' => 'string',
                     'location' => 'json',
                 ),
@@ -1259,6 +1771,9 @@ return array (
                         'Id' => array(
                             'type' => 'string',
                         ),
+                        'Arn' => array(
+                            'type' => 'string',
+                        ),
                         'PipelineId' => array(
                             'type' => 'string',
                         ),
@@ -1283,6 +1798,23 @@ return array (
                                 'Container' => array(
                                     'type' => 'string',
                                 ),
+                                'Encryption' => array(
+                                    'type' => 'object',
+                                    'properties' => array(
+                                        'Mode' => array(
+                                            'type' => 'string',
+                                        ),
+                                        'Key' => array(
+                                            'type' => 'string',
+                                        ),
+                                        'KeyMd5' => array(
+                                            'type' => 'string',
+                                        ),
+                                        'InitializationVector' => array(
+                                            'type' => 'string',
+                                        ),
+                                    ),
+                                ),
                             ),
                         ),
                         'Output' => array(
@@ -1296,6 +1828,23 @@ return array (
                                 ),
                                 'ThumbnailPattern' => array(
                                     'type' => 'string',
+                                ),
+                                'ThumbnailEncryption' => array(
+                                    'type' => 'object',
+                                    'properties' => array(
+                                        'Mode' => array(
+                                            'type' => 'string',
+                                        ),
+                                        'Key' => array(
+                                            'type' => 'string',
+                                        ),
+                                        'KeyMd5' => array(
+                                            'type' => 'string',
+                                        ),
+                                        'InitializationVector' => array(
+                                            'type' => 'string',
+                                        ),
+                                    ),
                                 ),
                                 'Rotate' => array(
                                     'type' => 'string',
@@ -1333,6 +1882,190 @@ return array (
                                             'InputKey' => array(
                                                 'type' => 'string',
                                             ),
+                                            'Encryption' => array(
+                                                'type' => 'object',
+                                                'properties' => array(
+                                                    'Mode' => array(
+                                                        'type' => 'string',
+                                                    ),
+                                                    'Key' => array(
+                                                        'type' => 'string',
+                                                    ),
+                                                    'KeyMd5' => array(
+                                                        'type' => 'string',
+                                                    ),
+                                                    'InitializationVector' => array(
+                                                        'type' => 'string',
+                                                    ),
+                                                ),
+                                            ),
+                                        ),
+                                    ),
+                                ),
+                                'AlbumArt' => array(
+                                    'type' => 'object',
+                                    'properties' => array(
+                                        'MergePolicy' => array(
+                                            'type' => 'string',
+                                        ),
+                                        'Artwork' => array(
+                                            'type' => 'array',
+                                            'items' => array(
+                                                'name' => 'Artwork',
+                                                'type' => 'object',
+                                                'properties' => array(
+                                                    'InputKey' => array(
+                                                        'type' => 'string',
+                                                    ),
+                                                    'MaxWidth' => array(
+                                                        'type' => 'string',
+                                                    ),
+                                                    'MaxHeight' => array(
+                                                        'type' => 'string',
+                                                    ),
+                                                    'SizingPolicy' => array(
+                                                        'type' => 'string',
+                                                    ),
+                                                    'PaddingPolicy' => array(
+                                                        'type' => 'string',
+                                                    ),
+                                                    'AlbumArtFormat' => array(
+                                                        'type' => 'string',
+                                                    ),
+                                                    'Encryption' => array(
+                                                        'type' => 'object',
+                                                        'properties' => array(
+                                                            'Mode' => array(
+                                                                'type' => 'string',
+                                                            ),
+                                                            'Key' => array(
+                                                                'type' => 'string',
+                                                            ),
+                                                            'KeyMd5' => array(
+                                                                'type' => 'string',
+                                                            ),
+                                                            'InitializationVector' => array(
+                                                                'type' => 'string',
+                                                            ),
+                                                        ),
+                                                    ),
+                                                ),
+                                            ),
+                                        ),
+                                    ),
+                                ),
+                                'Composition' => array(
+                                    'type' => 'array',
+                                    'items' => array(
+                                        'name' => 'Clip',
+                                        'type' => 'object',
+                                        'properties' => array(
+                                            'TimeSpan' => array(
+                                                'type' => 'object',
+                                                'properties' => array(
+                                                    'StartTime' => array(
+                                                        'type' => 'string',
+                                                    ),
+                                                    'Duration' => array(
+                                                        'type' => 'string',
+                                                    ),
+                                                ),
+                                            ),
+                                        ),
+                                    ),
+                                ),
+                                'Captions' => array(
+                                    'type' => 'object',
+                                    'properties' => array(
+                                        'MergePolicy' => array(
+                                            'type' => 'string',
+                                        ),
+                                        'CaptionSources' => array(
+                                            'type' => 'array',
+                                            'items' => array(
+                                                'name' => 'CaptionSource',
+                                                'type' => 'object',
+                                                'properties' => array(
+                                                    'Key' => array(
+                                                        'type' => 'string',
+                                                    ),
+                                                    'Language' => array(
+                                                        'type' => 'string',
+                                                    ),
+                                                    'TimeOffset' => array(
+                                                        'type' => 'string',
+                                                    ),
+                                                    'Label' => array(
+                                                        'type' => 'string',
+                                                    ),
+                                                    'Encryption' => array(
+                                                        'type' => 'object',
+                                                        'properties' => array(
+                                                            'Mode' => array(
+                                                                'type' => 'string',
+                                                            ),
+                                                            'Key' => array(
+                                                                'type' => 'string',
+                                                            ),
+                                                            'KeyMd5' => array(
+                                                                'type' => 'string',
+                                                            ),
+                                                            'InitializationVector' => array(
+                                                                'type' => 'string',
+                                                            ),
+                                                        ),
+                                                    ),
+                                                ),
+                                            ),
+                                        ),
+                                        'CaptionFormats' => array(
+                                            'type' => 'array',
+                                            'items' => array(
+                                                'name' => 'CaptionFormat',
+                                                'type' => 'object',
+                                                'properties' => array(
+                                                    'Format' => array(
+                                                        'type' => 'string',
+                                                    ),
+                                                    'Pattern' => array(
+                                                        'type' => 'string',
+                                                    ),
+                                                    'Encryption' => array(
+                                                        'type' => 'object',
+                                                        'properties' => array(
+                                                            'Mode' => array(
+                                                                'type' => 'string',
+                                                            ),
+                                                            'Key' => array(
+                                                                'type' => 'string',
+                                                            ),
+                                                            'KeyMd5' => array(
+                                                                'type' => 'string',
+                                                            ),
+                                                            'InitializationVector' => array(
+                                                                'type' => 'string',
+                                                            ),
+                                                        ),
+                                                    ),
+                                                ),
+                                            ),
+                                        ),
+                                    ),
+                                ),
+                                'Encryption' => array(
+                                    'type' => 'object',
+                                    'properties' => array(
+                                        'Mode' => array(
+                                            'type' => 'string',
+                                        ),
+                                        'Key' => array(
+                                            'type' => 'string',
+                                        ),
+                                        'KeyMd5' => array(
+                                            'type' => 'string',
+                                        ),
+                                        'InitializationVector' => array(
+                                            'type' => 'string',
                                         ),
                                     ),
                                 ),
@@ -1352,6 +2085,23 @@ return array (
                                     ),
                                     'ThumbnailPattern' => array(
                                         'type' => 'string',
+                                    ),
+                                    'ThumbnailEncryption' => array(
+                                        'type' => 'object',
+                                        'properties' => array(
+                                            'Mode' => array(
+                                                'type' => 'string',
+                                            ),
+                                            'Key' => array(
+                                                'type' => 'string',
+                                            ),
+                                            'KeyMd5' => array(
+                                                'type' => 'string',
+                                            ),
+                                            'InitializationVector' => array(
+                                                'type' => 'string',
+                                            ),
+                                        ),
                                     ),
                                     'Rotate' => array(
                                         'type' => 'string',
@@ -1389,6 +2139,190 @@ return array (
                                                 'InputKey' => array(
                                                     'type' => 'string',
                                                 ),
+                                                'Encryption' => array(
+                                                    'type' => 'object',
+                                                    'properties' => array(
+                                                        'Mode' => array(
+                                                            'type' => 'string',
+                                                        ),
+                                                        'Key' => array(
+                                                            'type' => 'string',
+                                                        ),
+                                                        'KeyMd5' => array(
+                                                            'type' => 'string',
+                                                        ),
+                                                        'InitializationVector' => array(
+                                                            'type' => 'string',
+                                                        ),
+                                                    ),
+                                                ),
+                                            ),
+                                        ),
+                                    ),
+                                    'AlbumArt' => array(
+                                        'type' => 'object',
+                                        'properties' => array(
+                                            'MergePolicy' => array(
+                                                'type' => 'string',
+                                            ),
+                                            'Artwork' => array(
+                                                'type' => 'array',
+                                                'items' => array(
+                                                    'name' => 'Artwork',
+                                                    'type' => 'object',
+                                                    'properties' => array(
+                                                        'InputKey' => array(
+                                                            'type' => 'string',
+                                                        ),
+                                                        'MaxWidth' => array(
+                                                            'type' => 'string',
+                                                        ),
+                                                        'MaxHeight' => array(
+                                                            'type' => 'string',
+                                                        ),
+                                                        'SizingPolicy' => array(
+                                                            'type' => 'string',
+                                                        ),
+                                                        'PaddingPolicy' => array(
+                                                            'type' => 'string',
+                                                        ),
+                                                        'AlbumArtFormat' => array(
+                                                            'type' => 'string',
+                                                        ),
+                                                        'Encryption' => array(
+                                                            'type' => 'object',
+                                                            'properties' => array(
+                                                                'Mode' => array(
+                                                                    'type' => 'string',
+                                                                ),
+                                                                'Key' => array(
+                                                                    'type' => 'string',
+                                                                ),
+                                                                'KeyMd5' => array(
+                                                                    'type' => 'string',
+                                                                ),
+                                                                'InitializationVector' => array(
+                                                                    'type' => 'string',
+                                                                ),
+                                                            ),
+                                                        ),
+                                                    ),
+                                                ),
+                                            ),
+                                        ),
+                                    ),
+                                    'Composition' => array(
+                                        'type' => 'array',
+                                        'items' => array(
+                                            'name' => 'Clip',
+                                            'type' => 'object',
+                                            'properties' => array(
+                                                'TimeSpan' => array(
+                                                    'type' => 'object',
+                                                    'properties' => array(
+                                                        'StartTime' => array(
+                                                            'type' => 'string',
+                                                        ),
+                                                        'Duration' => array(
+                                                            'type' => 'string',
+                                                        ),
+                                                    ),
+                                                ),
+                                            ),
+                                        ),
+                                    ),
+                                    'Captions' => array(
+                                        'type' => 'object',
+                                        'properties' => array(
+                                            'MergePolicy' => array(
+                                                'type' => 'string',
+                                            ),
+                                            'CaptionSources' => array(
+                                                'type' => 'array',
+                                                'items' => array(
+                                                    'name' => 'CaptionSource',
+                                                    'type' => 'object',
+                                                    'properties' => array(
+                                                        'Key' => array(
+                                                            'type' => 'string',
+                                                        ),
+                                                        'Language' => array(
+                                                            'type' => 'string',
+                                                        ),
+                                                        'TimeOffset' => array(
+                                                            'type' => 'string',
+                                                        ),
+                                                        'Label' => array(
+                                                            'type' => 'string',
+                                                        ),
+                                                        'Encryption' => array(
+                                                            'type' => 'object',
+                                                            'properties' => array(
+                                                                'Mode' => array(
+                                                                    'type' => 'string',
+                                                                ),
+                                                                'Key' => array(
+                                                                    'type' => 'string',
+                                                                ),
+                                                                'KeyMd5' => array(
+                                                                    'type' => 'string',
+                                                                ),
+                                                                'InitializationVector' => array(
+                                                                    'type' => 'string',
+                                                                ),
+                                                            ),
+                                                        ),
+                                                    ),
+                                                ),
+                                            ),
+                                            'CaptionFormats' => array(
+                                                'type' => 'array',
+                                                'items' => array(
+                                                    'name' => 'CaptionFormat',
+                                                    'type' => 'object',
+                                                    'properties' => array(
+                                                        'Format' => array(
+                                                            'type' => 'string',
+                                                        ),
+                                                        'Pattern' => array(
+                                                            'type' => 'string',
+                                                        ),
+                                                        'Encryption' => array(
+                                                            'type' => 'object',
+                                                            'properties' => array(
+                                                                'Mode' => array(
+                                                                    'type' => 'string',
+                                                                ),
+                                                                'Key' => array(
+                                                                    'type' => 'string',
+                                                                ),
+                                                                'KeyMd5' => array(
+                                                                    'type' => 'string',
+                                                                ),
+                                                                'InitializationVector' => array(
+                                                                    'type' => 'string',
+                                                                ),
+                                                            ),
+                                                        ),
+                                                    ),
+                                                ),
+                                            ),
+                                        ),
+                                    ),
+                                    'Encryption' => array(
+                                        'type' => 'object',
+                                        'properties' => array(
+                                            'Mode' => array(
+                                                'type' => 'string',
+                                            ),
+                                            'Key' => array(
+                                                'type' => 'string',
+                                            ),
+                                            'KeyMd5' => array(
+                                                'type' => 'string',
+                                            ),
+                                            'InitializationVector' => array(
+                                                'type' => 'string',
                                             ),
                                         ),
                                     ),
@@ -1429,6 +2363,12 @@ return array (
                         'Status' => array(
                             'type' => 'string',
                         ),
+                        'UserMetadata' => array(
+                            'type' => 'object',
+                            'additionalProperties' => array(
+                                'type' => 'string',
+                            ),
+                        ),
                     ),
                 ),
             ),
@@ -1460,6 +2400,9 @@ return array (
                             'type' => 'string',
                         ),
                         'Role' => array(
+                            'type' => 'string',
+                        ),
+                        'AwsKmsKeyArn' => array(
                             'type' => 'string',
                         ),
                         'Notifications' => array(
@@ -1560,6 +2503,9 @@ return array (
                         'Id' => array(
                             'type' => 'string',
                         ),
+                        'Arn' => array(
+                            'type' => 'string',
+                        ),
                         'Name' => array(
                             'type' => 'string',
                         ),
@@ -1583,6 +2529,14 @@ return array (
                                 ),
                                 'Channels' => array(
                                     'type' => 'string',
+                                ),
+                                'CodecOptions' => array(
+                                    'type' => 'object',
+                                    'properties' => array(
+                                        'Profile' => array(
+                                            'type' => 'string',
+                                        ),
+                                    ),
                                 ),
                             ),
                         ),
@@ -1729,6 +2683,9 @@ return array (
                             'Id' => array(
                                 'type' => 'string',
                             ),
+                            'Arn' => array(
+                                'type' => 'string',
+                            ),
                             'PipelineId' => array(
                                 'type' => 'string',
                             ),
@@ -1753,6 +2710,23 @@ return array (
                                     'Container' => array(
                                         'type' => 'string',
                                     ),
+                                    'Encryption' => array(
+                                        'type' => 'object',
+                                        'properties' => array(
+                                            'Mode' => array(
+                                                'type' => 'string',
+                                            ),
+                                            'Key' => array(
+                                                'type' => 'string',
+                                            ),
+                                            'KeyMd5' => array(
+                                                'type' => 'string',
+                                            ),
+                                            'InitializationVector' => array(
+                                                'type' => 'string',
+                                            ),
+                                        ),
+                                    ),
                                 ),
                             ),
                             'Output' => array(
@@ -1766,6 +2740,23 @@ return array (
                                     ),
                                     'ThumbnailPattern' => array(
                                         'type' => 'string',
+                                    ),
+                                    'ThumbnailEncryption' => array(
+                                        'type' => 'object',
+                                        'properties' => array(
+                                            'Mode' => array(
+                                                'type' => 'string',
+                                            ),
+                                            'Key' => array(
+                                                'type' => 'string',
+                                            ),
+                                            'KeyMd5' => array(
+                                                'type' => 'string',
+                                            ),
+                                            'InitializationVector' => array(
+                                                'type' => 'string',
+                                            ),
+                                        ),
                                     ),
                                     'Rotate' => array(
                                         'type' => 'string',
@@ -1803,6 +2794,190 @@ return array (
                                                 'InputKey' => array(
                                                     'type' => 'string',
                                                 ),
+                                                'Encryption' => array(
+                                                    'type' => 'object',
+                                                    'properties' => array(
+                                                        'Mode' => array(
+                                                            'type' => 'string',
+                                                        ),
+                                                        'Key' => array(
+                                                            'type' => 'string',
+                                                        ),
+                                                        'KeyMd5' => array(
+                                                            'type' => 'string',
+                                                        ),
+                                                        'InitializationVector' => array(
+                                                            'type' => 'string',
+                                                        ),
+                                                    ),
+                                                ),
+                                            ),
+                                        ),
+                                    ),
+                                    'AlbumArt' => array(
+                                        'type' => 'object',
+                                        'properties' => array(
+                                            'MergePolicy' => array(
+                                                'type' => 'string',
+                                            ),
+                                            'Artwork' => array(
+                                                'type' => 'array',
+                                                'items' => array(
+                                                    'name' => 'Artwork',
+                                                    'type' => 'object',
+                                                    'properties' => array(
+                                                        'InputKey' => array(
+                                                            'type' => 'string',
+                                                        ),
+                                                        'MaxWidth' => array(
+                                                            'type' => 'string',
+                                                        ),
+                                                        'MaxHeight' => array(
+                                                            'type' => 'string',
+                                                        ),
+                                                        'SizingPolicy' => array(
+                                                            'type' => 'string',
+                                                        ),
+                                                        'PaddingPolicy' => array(
+                                                            'type' => 'string',
+                                                        ),
+                                                        'AlbumArtFormat' => array(
+                                                            'type' => 'string',
+                                                        ),
+                                                        'Encryption' => array(
+                                                            'type' => 'object',
+                                                            'properties' => array(
+                                                                'Mode' => array(
+                                                                    'type' => 'string',
+                                                                ),
+                                                                'Key' => array(
+                                                                    'type' => 'string',
+                                                                ),
+                                                                'KeyMd5' => array(
+                                                                    'type' => 'string',
+                                                                ),
+                                                                'InitializationVector' => array(
+                                                                    'type' => 'string',
+                                                                ),
+                                                            ),
+                                                        ),
+                                                    ),
+                                                ),
+                                            ),
+                                        ),
+                                    ),
+                                    'Composition' => array(
+                                        'type' => 'array',
+                                        'items' => array(
+                                            'name' => 'Clip',
+                                            'type' => 'object',
+                                            'properties' => array(
+                                                'TimeSpan' => array(
+                                                    'type' => 'object',
+                                                    'properties' => array(
+                                                        'StartTime' => array(
+                                                            'type' => 'string',
+                                                        ),
+                                                        'Duration' => array(
+                                                            'type' => 'string',
+                                                        ),
+                                                    ),
+                                                ),
+                                            ),
+                                        ),
+                                    ),
+                                    'Captions' => array(
+                                        'type' => 'object',
+                                        'properties' => array(
+                                            'MergePolicy' => array(
+                                                'type' => 'string',
+                                            ),
+                                            'CaptionSources' => array(
+                                                'type' => 'array',
+                                                'items' => array(
+                                                    'name' => 'CaptionSource',
+                                                    'type' => 'object',
+                                                    'properties' => array(
+                                                        'Key' => array(
+                                                            'type' => 'string',
+                                                        ),
+                                                        'Language' => array(
+                                                            'type' => 'string',
+                                                        ),
+                                                        'TimeOffset' => array(
+                                                            'type' => 'string',
+                                                        ),
+                                                        'Label' => array(
+                                                            'type' => 'string',
+                                                        ),
+                                                        'Encryption' => array(
+                                                            'type' => 'object',
+                                                            'properties' => array(
+                                                                'Mode' => array(
+                                                                    'type' => 'string',
+                                                                ),
+                                                                'Key' => array(
+                                                                    'type' => 'string',
+                                                                ),
+                                                                'KeyMd5' => array(
+                                                                    'type' => 'string',
+                                                                ),
+                                                                'InitializationVector' => array(
+                                                                    'type' => 'string',
+                                                                ),
+                                                            ),
+                                                        ),
+                                                    ),
+                                                ),
+                                            ),
+                                            'CaptionFormats' => array(
+                                                'type' => 'array',
+                                                'items' => array(
+                                                    'name' => 'CaptionFormat',
+                                                    'type' => 'object',
+                                                    'properties' => array(
+                                                        'Format' => array(
+                                                            'type' => 'string',
+                                                        ),
+                                                        'Pattern' => array(
+                                                            'type' => 'string',
+                                                        ),
+                                                        'Encryption' => array(
+                                                            'type' => 'object',
+                                                            'properties' => array(
+                                                                'Mode' => array(
+                                                                    'type' => 'string',
+                                                                ),
+                                                                'Key' => array(
+                                                                    'type' => 'string',
+                                                                ),
+                                                                'KeyMd5' => array(
+                                                                    'type' => 'string',
+                                                                ),
+                                                                'InitializationVector' => array(
+                                                                    'type' => 'string',
+                                                                ),
+                                                            ),
+                                                        ),
+                                                    ),
+                                                ),
+                                            ),
+                                        ),
+                                    ),
+                                    'Encryption' => array(
+                                        'type' => 'object',
+                                        'properties' => array(
+                                            'Mode' => array(
+                                                'type' => 'string',
+                                            ),
+                                            'Key' => array(
+                                                'type' => 'string',
+                                            ),
+                                            'KeyMd5' => array(
+                                                'type' => 'string',
+                                            ),
+                                            'InitializationVector' => array(
+                                                'type' => 'string',
                                             ),
                                         ),
                                     ),
@@ -1822,6 +2997,23 @@ return array (
                                         ),
                                         'ThumbnailPattern' => array(
                                             'type' => 'string',
+                                        ),
+                                        'ThumbnailEncryption' => array(
+                                            'type' => 'object',
+                                            'properties' => array(
+                                                'Mode' => array(
+                                                    'type' => 'string',
+                                                ),
+                                                'Key' => array(
+                                                    'type' => 'string',
+                                                ),
+                                                'KeyMd5' => array(
+                                                    'type' => 'string',
+                                                ),
+                                                'InitializationVector' => array(
+                                                    'type' => 'string',
+                                                ),
+                                            ),
                                         ),
                                         'Rotate' => array(
                                             'type' => 'string',
@@ -1859,6 +3051,190 @@ return array (
                                                     'InputKey' => array(
                                                         'type' => 'string',
                                                     ),
+                                                    'Encryption' => array(
+                                                        'type' => 'object',
+                                                        'properties' => array(
+                                                            'Mode' => array(
+                                                                'type' => 'string',
+                                                            ),
+                                                            'Key' => array(
+                                                                'type' => 'string',
+                                                            ),
+                                                            'KeyMd5' => array(
+                                                                'type' => 'string',
+                                                            ),
+                                                            'InitializationVector' => array(
+                                                                'type' => 'string',
+                                                            ),
+                                                        ),
+                                                    ),
+                                                ),
+                                            ),
+                                        ),
+                                        'AlbumArt' => array(
+                                            'type' => 'object',
+                                            'properties' => array(
+                                                'MergePolicy' => array(
+                                                    'type' => 'string',
+                                                ),
+                                                'Artwork' => array(
+                                                    'type' => 'array',
+                                                    'items' => array(
+                                                        'name' => 'Artwork',
+                                                        'type' => 'object',
+                                                        'properties' => array(
+                                                            'InputKey' => array(
+                                                                'type' => 'string',
+                                                            ),
+                                                            'MaxWidth' => array(
+                                                                'type' => 'string',
+                                                            ),
+                                                            'MaxHeight' => array(
+                                                                'type' => 'string',
+                                                            ),
+                                                            'SizingPolicy' => array(
+                                                                'type' => 'string',
+                                                            ),
+                                                            'PaddingPolicy' => array(
+                                                                'type' => 'string',
+                                                            ),
+                                                            'AlbumArtFormat' => array(
+                                                                'type' => 'string',
+                                                            ),
+                                                            'Encryption' => array(
+                                                                'type' => 'object',
+                                                                'properties' => array(
+                                                                    'Mode' => array(
+                                                                        'type' => 'string',
+                                                                    ),
+                                                                    'Key' => array(
+                                                                        'type' => 'string',
+                                                                    ),
+                                                                    'KeyMd5' => array(
+                                                                        'type' => 'string',
+                                                                    ),
+                                                                    'InitializationVector' => array(
+                                                                        'type' => 'string',
+                                                                    ),
+                                                                ),
+                                                            ),
+                                                        ),
+                                                    ),
+                                                ),
+                                            ),
+                                        ),
+                                        'Composition' => array(
+                                            'type' => 'array',
+                                            'items' => array(
+                                                'name' => 'Clip',
+                                                'type' => 'object',
+                                                'properties' => array(
+                                                    'TimeSpan' => array(
+                                                        'type' => 'object',
+                                                        'properties' => array(
+                                                            'StartTime' => array(
+                                                                'type' => 'string',
+                                                            ),
+                                                            'Duration' => array(
+                                                                'type' => 'string',
+                                                            ),
+                                                        ),
+                                                    ),
+                                                ),
+                                            ),
+                                        ),
+                                        'Captions' => array(
+                                            'type' => 'object',
+                                            'properties' => array(
+                                                'MergePolicy' => array(
+                                                    'type' => 'string',
+                                                ),
+                                                'CaptionSources' => array(
+                                                    'type' => 'array',
+                                                    'items' => array(
+                                                        'name' => 'CaptionSource',
+                                                        'type' => 'object',
+                                                        'properties' => array(
+                                                            'Key' => array(
+                                                                'type' => 'string',
+                                                            ),
+                                                            'Language' => array(
+                                                                'type' => 'string',
+                                                            ),
+                                                            'TimeOffset' => array(
+                                                                'type' => 'string',
+                                                            ),
+                                                            'Label' => array(
+                                                                'type' => 'string',
+                                                            ),
+                                                            'Encryption' => array(
+                                                                'type' => 'object',
+                                                                'properties' => array(
+                                                                    'Mode' => array(
+                                                                        'type' => 'string',
+                                                                    ),
+                                                                    'Key' => array(
+                                                                        'type' => 'string',
+                                                                    ),
+                                                                    'KeyMd5' => array(
+                                                                        'type' => 'string',
+                                                                    ),
+                                                                    'InitializationVector' => array(
+                                                                        'type' => 'string',
+                                                                    ),
+                                                                ),
+                                                            ),
+                                                        ),
+                                                    ),
+                                                ),
+                                                'CaptionFormats' => array(
+                                                    'type' => 'array',
+                                                    'items' => array(
+                                                        'name' => 'CaptionFormat',
+                                                        'type' => 'object',
+                                                        'properties' => array(
+                                                            'Format' => array(
+                                                                'type' => 'string',
+                                                            ),
+                                                            'Pattern' => array(
+                                                                'type' => 'string',
+                                                            ),
+                                                            'Encryption' => array(
+                                                                'type' => 'object',
+                                                                'properties' => array(
+                                                                    'Mode' => array(
+                                                                        'type' => 'string',
+                                                                    ),
+                                                                    'Key' => array(
+                                                                        'type' => 'string',
+                                                                    ),
+                                                                    'KeyMd5' => array(
+                                                                        'type' => 'string',
+                                                                    ),
+                                                                    'InitializationVector' => array(
+                                                                        'type' => 'string',
+                                                                    ),
+                                                                ),
+                                                            ),
+                                                        ),
+                                                    ),
+                                                ),
+                                            ),
+                                        ),
+                                        'Encryption' => array(
+                                            'type' => 'object',
+                                            'properties' => array(
+                                                'Mode' => array(
+                                                    'type' => 'string',
+                                                ),
+                                                'Key' => array(
+                                                    'type' => 'string',
+                                                ),
+                                                'KeyMd5' => array(
+                                                    'type' => 'string',
+                                                ),
+                                                'InitializationVector' => array(
+                                                    'type' => 'string',
                                                 ),
                                             ),
                                         ),
@@ -1898,6 +3274,12 @@ return array (
                             ),
                             'Status' => array(
                                 'type' => 'string',
+                            ),
+                            'UserMetadata' => array(
+                                'type' => 'object',
+                                'additionalProperties' => array(
+                                    'type' => 'string',
+                                ),
                             ),
                         ),
                     ),
@@ -1922,6 +3304,9 @@ return array (
                             'Id' => array(
                                 'type' => 'string',
                             ),
+                            'Arn' => array(
+                                'type' => 'string',
+                            ),
                             'PipelineId' => array(
                                 'type' => 'string',
                             ),
@@ -1946,6 +3331,23 @@ return array (
                                     'Container' => array(
                                         'type' => 'string',
                                     ),
+                                    'Encryption' => array(
+                                        'type' => 'object',
+                                        'properties' => array(
+                                            'Mode' => array(
+                                                'type' => 'string',
+                                            ),
+                                            'Key' => array(
+                                                'type' => 'string',
+                                            ),
+                                            'KeyMd5' => array(
+                                                'type' => 'string',
+                                            ),
+                                            'InitializationVector' => array(
+                                                'type' => 'string',
+                                            ),
+                                        ),
+                                    ),
                                 ),
                             ),
                             'Output' => array(
@@ -1959,6 +3361,23 @@ return array (
                                     ),
                                     'ThumbnailPattern' => array(
                                         'type' => 'string',
+                                    ),
+                                    'ThumbnailEncryption' => array(
+                                        'type' => 'object',
+                                        'properties' => array(
+                                            'Mode' => array(
+                                                'type' => 'string',
+                                            ),
+                                            'Key' => array(
+                                                'type' => 'string',
+                                            ),
+                                            'KeyMd5' => array(
+                                                'type' => 'string',
+                                            ),
+                                            'InitializationVector' => array(
+                                                'type' => 'string',
+                                            ),
+                                        ),
                                     ),
                                     'Rotate' => array(
                                         'type' => 'string',
@@ -1996,6 +3415,190 @@ return array (
                                                 'InputKey' => array(
                                                     'type' => 'string',
                                                 ),
+                                                'Encryption' => array(
+                                                    'type' => 'object',
+                                                    'properties' => array(
+                                                        'Mode' => array(
+                                                            'type' => 'string',
+                                                        ),
+                                                        'Key' => array(
+                                                            'type' => 'string',
+                                                        ),
+                                                        'KeyMd5' => array(
+                                                            'type' => 'string',
+                                                        ),
+                                                        'InitializationVector' => array(
+                                                            'type' => 'string',
+                                                        ),
+                                                    ),
+                                                ),
+                                            ),
+                                        ),
+                                    ),
+                                    'AlbumArt' => array(
+                                        'type' => 'object',
+                                        'properties' => array(
+                                            'MergePolicy' => array(
+                                                'type' => 'string',
+                                            ),
+                                            'Artwork' => array(
+                                                'type' => 'array',
+                                                'items' => array(
+                                                    'name' => 'Artwork',
+                                                    'type' => 'object',
+                                                    'properties' => array(
+                                                        'InputKey' => array(
+                                                            'type' => 'string',
+                                                        ),
+                                                        'MaxWidth' => array(
+                                                            'type' => 'string',
+                                                        ),
+                                                        'MaxHeight' => array(
+                                                            'type' => 'string',
+                                                        ),
+                                                        'SizingPolicy' => array(
+                                                            'type' => 'string',
+                                                        ),
+                                                        'PaddingPolicy' => array(
+                                                            'type' => 'string',
+                                                        ),
+                                                        'AlbumArtFormat' => array(
+                                                            'type' => 'string',
+                                                        ),
+                                                        'Encryption' => array(
+                                                            'type' => 'object',
+                                                            'properties' => array(
+                                                                'Mode' => array(
+                                                                    'type' => 'string',
+                                                                ),
+                                                                'Key' => array(
+                                                                    'type' => 'string',
+                                                                ),
+                                                                'KeyMd5' => array(
+                                                                    'type' => 'string',
+                                                                ),
+                                                                'InitializationVector' => array(
+                                                                    'type' => 'string',
+                                                                ),
+                                                            ),
+                                                        ),
+                                                    ),
+                                                ),
+                                            ),
+                                        ),
+                                    ),
+                                    'Composition' => array(
+                                        'type' => 'array',
+                                        'items' => array(
+                                            'name' => 'Clip',
+                                            'type' => 'object',
+                                            'properties' => array(
+                                                'TimeSpan' => array(
+                                                    'type' => 'object',
+                                                    'properties' => array(
+                                                        'StartTime' => array(
+                                                            'type' => 'string',
+                                                        ),
+                                                        'Duration' => array(
+                                                            'type' => 'string',
+                                                        ),
+                                                    ),
+                                                ),
+                                            ),
+                                        ),
+                                    ),
+                                    'Captions' => array(
+                                        'type' => 'object',
+                                        'properties' => array(
+                                            'MergePolicy' => array(
+                                                'type' => 'string',
+                                            ),
+                                            'CaptionSources' => array(
+                                                'type' => 'array',
+                                                'items' => array(
+                                                    'name' => 'CaptionSource',
+                                                    'type' => 'object',
+                                                    'properties' => array(
+                                                        'Key' => array(
+                                                            'type' => 'string',
+                                                        ),
+                                                        'Language' => array(
+                                                            'type' => 'string',
+                                                        ),
+                                                        'TimeOffset' => array(
+                                                            'type' => 'string',
+                                                        ),
+                                                        'Label' => array(
+                                                            'type' => 'string',
+                                                        ),
+                                                        'Encryption' => array(
+                                                            'type' => 'object',
+                                                            'properties' => array(
+                                                                'Mode' => array(
+                                                                    'type' => 'string',
+                                                                ),
+                                                                'Key' => array(
+                                                                    'type' => 'string',
+                                                                ),
+                                                                'KeyMd5' => array(
+                                                                    'type' => 'string',
+                                                                ),
+                                                                'InitializationVector' => array(
+                                                                    'type' => 'string',
+                                                                ),
+                                                            ),
+                                                        ),
+                                                    ),
+                                                ),
+                                            ),
+                                            'CaptionFormats' => array(
+                                                'type' => 'array',
+                                                'items' => array(
+                                                    'name' => 'CaptionFormat',
+                                                    'type' => 'object',
+                                                    'properties' => array(
+                                                        'Format' => array(
+                                                            'type' => 'string',
+                                                        ),
+                                                        'Pattern' => array(
+                                                            'type' => 'string',
+                                                        ),
+                                                        'Encryption' => array(
+                                                            'type' => 'object',
+                                                            'properties' => array(
+                                                                'Mode' => array(
+                                                                    'type' => 'string',
+                                                                ),
+                                                                'Key' => array(
+                                                                    'type' => 'string',
+                                                                ),
+                                                                'KeyMd5' => array(
+                                                                    'type' => 'string',
+                                                                ),
+                                                                'InitializationVector' => array(
+                                                                    'type' => 'string',
+                                                                ),
+                                                            ),
+                                                        ),
+                                                    ),
+                                                ),
+                                            ),
+                                        ),
+                                    ),
+                                    'Encryption' => array(
+                                        'type' => 'object',
+                                        'properties' => array(
+                                            'Mode' => array(
+                                                'type' => 'string',
+                                            ),
+                                            'Key' => array(
+                                                'type' => 'string',
+                                            ),
+                                            'KeyMd5' => array(
+                                                'type' => 'string',
+                                            ),
+                                            'InitializationVector' => array(
+                                                'type' => 'string',
                                             ),
                                         ),
                                     ),
@@ -2015,6 +3618,23 @@ return array (
                                         ),
                                         'ThumbnailPattern' => array(
                                             'type' => 'string',
+                                        ),
+                                        'ThumbnailEncryption' => array(
+                                            'type' => 'object',
+                                            'properties' => array(
+                                                'Mode' => array(
+                                                    'type' => 'string',
+                                                ),
+                                                'Key' => array(
+                                                    'type' => 'string',
+                                                ),
+                                                'KeyMd5' => array(
+                                                    'type' => 'string',
+                                                ),
+                                                'InitializationVector' => array(
+                                                    'type' => 'string',
+                                                ),
+                                            ),
                                         ),
                                         'Rotate' => array(
                                             'type' => 'string',
@@ -2052,6 +3672,190 @@ return array (
                                                     'InputKey' => array(
                                                         'type' => 'string',
                                                     ),
+                                                    'Encryption' => array(
+                                                        'type' => 'object',
+                                                        'properties' => array(
+                                                            'Mode' => array(
+                                                                'type' => 'string',
+                                                            ),
+                                                            'Key' => array(
+                                                                'type' => 'string',
+                                                            ),
+                                                            'KeyMd5' => array(
+                                                                'type' => 'string',
+                                                            ),
+                                                            'InitializationVector' => array(
+                                                                'type' => 'string',
+                                                            ),
+                                                        ),
+                                                    ),
+                                                ),
+                                            ),
+                                        ),
+                                        'AlbumArt' => array(
+                                            'type' => 'object',
+                                            'properties' => array(
+                                                'MergePolicy' => array(
+                                                    'type' => 'string',
+                                                ),
+                                                'Artwork' => array(
+                                                    'type' => 'array',
+                                                    'items' => array(
+                                                        'name' => 'Artwork',
+                                                        'type' => 'object',
+                                                        'properties' => array(
+                                                            'InputKey' => array(
+                                                                'type' => 'string',
+                                                            ),
+                                                            'MaxWidth' => array(
+                                                                'type' => 'string',
+                                                            ),
+                                                            'MaxHeight' => array(
+                                                                'type' => 'string',
+                                                            ),
+                                                            'SizingPolicy' => array(
+                                                                'type' => 'string',
+                                                            ),
+                                                            'PaddingPolicy' => array(
+                                                                'type' => 'string',
+                                                            ),
+                                                            'AlbumArtFormat' => array(
+                                                                'type' => 'string',
+                                                            ),
+                                                            'Encryption' => array(
+                                                                'type' => 'object',
+                                                                'properties' => array(
+                                                                    'Mode' => array(
+                                                                        'type' => 'string',
+                                                                    ),
+                                                                    'Key' => array(
+                                                                        'type' => 'string',
+                                                                    ),
+                                                                    'KeyMd5' => array(
+                                                                        'type' => 'string',
+                                                                    ),
+                                                                    'InitializationVector' => array(
+                                                                        'type' => 'string',
+                                                                    ),
+                                                                ),
+                                                            ),
+                                                        ),
+                                                    ),
+                                                ),
+                                            ),
+                                        ),
+                                        'Composition' => array(
+                                            'type' => 'array',
+                                            'items' => array(
+                                                'name' => 'Clip',
+                                                'type' => 'object',
+                                                'properties' => array(
+                                                    'TimeSpan' => array(
+                                                        'type' => 'object',
+                                                        'properties' => array(
+                                                            'StartTime' => array(
+                                                                'type' => 'string',
+                                                            ),
+                                                            'Duration' => array(
+                                                                'type' => 'string',
+                                                            ),
+                                                        ),
+                                                    ),
+                                                ),
+                                            ),
+                                        ),
+                                        'Captions' => array(
+                                            'type' => 'object',
+                                            'properties' => array(
+                                                'MergePolicy' => array(
+                                                    'type' => 'string',
+                                                ),
+                                                'CaptionSources' => array(
+                                                    'type' => 'array',
+                                                    'items' => array(
+                                                        'name' => 'CaptionSource',
+                                                        'type' => 'object',
+                                                        'properties' => array(
+                                                            'Key' => array(
+                                                                'type' => 'string',
+                                                            ),
+                                                            'Language' => array(
+                                                                'type' => 'string',
+                                                            ),
+                                                            'TimeOffset' => array(
+                                                                'type' => 'string',
+                                                            ),
+                                                            'Label' => array(
+                                                                'type' => 'string',
+                                                            ),
+                                                            'Encryption' => array(
+                                                                'type' => 'object',
+                                                                'properties' => array(
+                                                                    'Mode' => array(
+                                                                        'type' => 'string',
+                                                                    ),
+                                                                    'Key' => array(
+                                                                        'type' => 'string',
+                                                                    ),
+                                                                    'KeyMd5' => array(
+                                                                        'type' => 'string',
+                                                                    ),
+                                                                    'InitializationVector' => array(
+                                                                        'type' => 'string',
+                                                                    ),
+                                                                ),
+                                                            ),
+                                                        ),
+                                                    ),
+                                                ),
+                                                'CaptionFormats' => array(
+                                                    'type' => 'array',
+                                                    'items' => array(
+                                                        'name' => 'CaptionFormat',
+                                                        'type' => 'object',
+                                                        'properties' => array(
+                                                            'Format' => array(
+                                                                'type' => 'string',
+                                                            ),
+                                                            'Pattern' => array(
+                                                                'type' => 'string',
+                                                            ),
+                                                            'Encryption' => array(
+                                                                'type' => 'object',
+                                                                'properties' => array(
+                                                                    'Mode' => array(
+                                                                        'type' => 'string',
+                                                                    ),
+                                                                    'Key' => array(
+                                                                        'type' => 'string',
+                                                                    ),
+                                                                    'KeyMd5' => array(
+                                                                        'type' => 'string',
+                                                                    ),
+                                                                    'InitializationVector' => array(
+                                                                        'type' => 'string',
+                                                                    ),
+                                                                ),
+                                                            ),
+                                                        ),
+                                                    ),
+                                                ),
+                                            ),
+                                        ),
+                                        'Encryption' => array(
+                                            'type' => 'object',
+                                            'properties' => array(
+                                                'Mode' => array(
+                                                    'type' => 'string',
+                                                ),
+                                                'Key' => array(
+                                                    'type' => 'string',
+                                                ),
+                                                'KeyMd5' => array(
+                                                    'type' => 'string',
+                                                ),
+                                                'InitializationVector' => array(
+                                                    'type' => 'string',
                                                 ),
                                             ),
                                         ),
@@ -2091,6 +3895,12 @@ return array (
                             ),
                             'Status' => array(
                                 'type' => 'string',
+                            ),
+                            'UserMetadata' => array(
+                                'type' => 'object',
+                                'additionalProperties' => array(
+                                    'type' => 'string',
+                                ),
                             ),
                         ),
                     ),
@@ -2131,6 +3941,9 @@ return array (
                                 'type' => 'string',
                             ),
                             'Role' => array(
+                                'type' => 'string',
+                            ),
+                            'AwsKmsKeyArn' => array(
                                 'type' => 'string',
                             ),
                             'Notifications' => array(
@@ -2219,6 +4032,10 @@ return array (
                         ),
                     ),
                 ),
+                'NextPageToken' => array(
+                    'type' => 'string',
+                    'location' => 'json',
+                ),
             ),
         ),
         'ListPresetsResponse' => array(
@@ -2233,6 +4050,9 @@ return array (
                         'type' => 'object',
                         'properties' => array(
                             'Id' => array(
+                                'type' => 'string',
+                            ),
+                            'Arn' => array(
                                 'type' => 'string',
                             ),
                             'Name' => array(
@@ -2258,6 +4078,14 @@ return array (
                                     ),
                                     'Channels' => array(
                                         'type' => 'string',
+                                    ),
+                                    'CodecOptions' => array(
+                                        'type' => 'object',
+                                        'properties' => array(
+                                            'Profile' => array(
+                                                'type' => 'string',
+                                            ),
+                                        ),
                                     ),
                                 ),
                             ),
@@ -2385,6 +4213,10 @@ return array (
                         ),
                     ),
                 ),
+                'NextPageToken' => array(
+                    'type' => 'string',
+                    'location' => 'json',
+                ),
             ),
         ),
         'ReadJobResponse' => array(
@@ -2396,6 +4228,9 @@ return array (
                     'location' => 'json',
                     'properties' => array(
                         'Id' => array(
+                            'type' => 'string',
+                        ),
+                        'Arn' => array(
                             'type' => 'string',
                         ),
                         'PipelineId' => array(
@@ -2422,6 +4257,23 @@ return array (
                                 'Container' => array(
                                     'type' => 'string',
                                 ),
+                                'Encryption' => array(
+                                    'type' => 'object',
+                                    'properties' => array(
+                                        'Mode' => array(
+                                            'type' => 'string',
+                                        ),
+                                        'Key' => array(
+                                            'type' => 'string',
+                                        ),
+                                        'KeyMd5' => array(
+                                            'type' => 'string',
+                                        ),
+                                        'InitializationVector' => array(
+                                            'type' => 'string',
+                                        ),
+                                    ),
+                                ),
                             ),
                         ),
                         'Output' => array(
@@ -2435,6 +4287,23 @@ return array (
                                 ),
                                 'ThumbnailPattern' => array(
                                     'type' => 'string',
+                                ),
+                                'ThumbnailEncryption' => array(
+                                    'type' => 'object',
+                                    'properties' => array(
+                                        'Mode' => array(
+                                            'type' => 'string',
+                                        ),
+                                        'Key' => array(
+                                            'type' => 'string',
+                                        ),
+                                        'KeyMd5' => array(
+                                            'type' => 'string',
+                                        ),
+                                        'InitializationVector' => array(
+                                            'type' => 'string',
+                                        ),
+                                    ),
                                 ),
                                 'Rotate' => array(
                                     'type' => 'string',
@@ -2472,6 +4341,190 @@ return array (
                                             'InputKey' => array(
                                                 'type' => 'string',
                                             ),
+                                            'Encryption' => array(
+                                                'type' => 'object',
+                                                'properties' => array(
+                                                    'Mode' => array(
+                                                        'type' => 'string',
+                                                    ),
+                                                    'Key' => array(
+                                                        'type' => 'string',
+                                                    ),
+                                                    'KeyMd5' => array(
+                                                        'type' => 'string',
+                                                    ),
+                                                    'InitializationVector' => array(
+                                                        'type' => 'string',
+                                                    ),
+                                                ),
+                                            ),
+                                        ),
+                                    ),
+                                ),
+                                'AlbumArt' => array(
+                                    'type' => 'object',
+                                    'properties' => array(
+                                        'MergePolicy' => array(
+                                            'type' => 'string',
+                                        ),
+                                        'Artwork' => array(
+                                            'type' => 'array',
+                                            'items' => array(
+                                                'name' => 'Artwork',
+                                                'type' => 'object',
+                                                'properties' => array(
+                                                    'InputKey' => array(
+                                                        'type' => 'string',
+                                                    ),
+                                                    'MaxWidth' => array(
+                                                        'type' => 'string',
+                                                    ),
+                                                    'MaxHeight' => array(
+                                                        'type' => 'string',
+                                                    ),
+                                                    'SizingPolicy' => array(
+                                                        'type' => 'string',
+                                                    ),
+                                                    'PaddingPolicy' => array(
+                                                        'type' => 'string',
+                                                    ),
+                                                    'AlbumArtFormat' => array(
+                                                        'type' => 'string',
+                                                    ),
+                                                    'Encryption' => array(
+                                                        'type' => 'object',
+                                                        'properties' => array(
+                                                            'Mode' => array(
+                                                                'type' => 'string',
+                                                            ),
+                                                            'Key' => array(
+                                                                'type' => 'string',
+                                                            ),
+                                                            'KeyMd5' => array(
+                                                                'type' => 'string',
+                                                            ),
+                                                            'InitializationVector' => array(
+                                                                'type' => 'string',
+                                                            ),
+                                                        ),
+                                                    ),
+                                                ),
+                                            ),
+                                        ),
+                                    ),
+                                ),
+                                'Composition' => array(
+                                    'type' => 'array',
+                                    'items' => array(
+                                        'name' => 'Clip',
+                                        'type' => 'object',
+                                        'properties' => array(
+                                            'TimeSpan' => array(
+                                                'type' => 'object',
+                                                'properties' => array(
+                                                    'StartTime' => array(
+                                                        'type' => 'string',
+                                                    ),
+                                                    'Duration' => array(
+                                                        'type' => 'string',
+                                                    ),
+                                                ),
+                                            ),
+                                        ),
+                                    ),
+                                ),
+                                'Captions' => array(
+                                    'type' => 'object',
+                                    'properties' => array(
+                                        'MergePolicy' => array(
+                                            'type' => 'string',
+                                        ),
+                                        'CaptionSources' => array(
+                                            'type' => 'array',
+                                            'items' => array(
+                                                'name' => 'CaptionSource',
+                                                'type' => 'object',
+                                                'properties' => array(
+                                                    'Key' => array(
+                                                        'type' => 'string',
+                                                    ),
+                                                    'Language' => array(
+                                                        'type' => 'string',
+                                                    ),
+                                                    'TimeOffset' => array(
+                                                        'type' => 'string',
+                                                    ),
+                                                    'Label' => array(
+                                                        'type' => 'string',
+                                                    ),
+                                                    'Encryption' => array(
+                                                        'type' => 'object',
+                                                        'properties' => array(
+                                                            'Mode' => array(
+                                                                'type' => 'string',
+                                                            ),
+                                                            'Key' => array(
+                                                                'type' => 'string',
+                                                            ),
+                                                            'KeyMd5' => array(
+                                                                'type' => 'string',
+                                                            ),
+                                                            'InitializationVector' => array(
+                                                                'type' => 'string',
+                                                            ),
+                                                        ),
+                                                    ),
+                                                ),
+                                            ),
+                                        ),
+                                        'CaptionFormats' => array(
+                                            'type' => 'array',
+                                            'items' => array(
+                                                'name' => 'CaptionFormat',
+                                                'type' => 'object',
+                                                'properties' => array(
+                                                    'Format' => array(
+                                                        'type' => 'string',
+                                                    ),
+                                                    'Pattern' => array(
+                                                        'type' => 'string',
+                                                    ),
+                                                    'Encryption' => array(
+                                                        'type' => 'object',
+                                                        'properties' => array(
+                                                            'Mode' => array(
+                                                                'type' => 'string',
+                                                            ),
+                                                            'Key' => array(
+                                                                'type' => 'string',
+                                                            ),
+                                                            'KeyMd5' => array(
+                                                                'type' => 'string',
+                                                            ),
+                                                            'InitializationVector' => array(
+                                                                'type' => 'string',
+                                                            ),
+                                                        ),
+                                                    ),
+                                                ),
+                                            ),
+                                        ),
+                                    ),
+                                ),
+                                'Encryption' => array(
+                                    'type' => 'object',
+                                    'properties' => array(
+                                        'Mode' => array(
+                                            'type' => 'string',
+                                        ),
+                                        'Key' => array(
+                                            'type' => 'string',
+                                        ),
+                                        'KeyMd5' => array(
+                                            'type' => 'string',
+                                        ),
+                                        'InitializationVector' => array(
+                                            'type' => 'string',
                                         ),
                                     ),
                                 ),
@@ -2491,6 +4544,23 @@ return array (
                                     ),
                                     'ThumbnailPattern' => array(
                                         'type' => 'string',
+                                    ),
+                                    'ThumbnailEncryption' => array(
+                                        'type' => 'object',
+                                        'properties' => array(
+                                            'Mode' => array(
+                                                'type' => 'string',
+                                            ),
+                                            'Key' => array(
+                                                'type' => 'string',
+                                            ),
+                                            'KeyMd5' => array(
+                                                'type' => 'string',
+                                            ),
+                                            'InitializationVector' => array(
+                                                'type' => 'string',
+                                            ),
+                                        ),
                                     ),
                                     'Rotate' => array(
                                         'type' => 'string',
@@ -2528,6 +4598,190 @@ return array (
                                                 'InputKey' => array(
                                                     'type' => 'string',
                                                 ),
+                                                'Encryption' => array(
+                                                    'type' => 'object',
+                                                    'properties' => array(
+                                                        'Mode' => array(
+                                                            'type' => 'string',
+                                                        ),
+                                                        'Key' => array(
+                                                            'type' => 'string',
+                                                        ),
+                                                        'KeyMd5' => array(
+                                                            'type' => 'string',
+                                                        ),
+                                                        'InitializationVector' => array(
+                                                            'type' => 'string',
+                                                        ),
+                                                    ),
+                                                ),
+                                            ),
+                                        ),
+                                    ),
+                                    'AlbumArt' => array(
+                                        'type' => 'object',
+                                        'properties' => array(
+                                            'MergePolicy' => array(
+                                                'type' => 'string',
+                                            ),
+                                            'Artwork' => array(
+                                                'type' => 'array',
+                                                'items' => array(
+                                                    'name' => 'Artwork',
+                                                    'type' => 'object',
+                                                    'properties' => array(
+                                                        'InputKey' => array(
+                                                            'type' => 'string',
+                                                        ),
+                                                        'MaxWidth' => array(
+                                                            'type' => 'string',
+                                                        ),
+                                                        'MaxHeight' => array(
+                                                            'type' => 'string',
+                                                        ),
+                                                        'SizingPolicy' => array(
+                                                            'type' => 'string',
+                                                        ),
+                                                        'PaddingPolicy' => array(
+                                                            'type' => 'string',
+                                                        ),
+                                                        'AlbumArtFormat' => array(
+                                                            'type' => 'string',
+                                                        ),
+                                                        'Encryption' => array(
+                                                            'type' => 'object',
+                                                            'properties' => array(
+                                                                'Mode' => array(
+                                                                    'type' => 'string',
+                                                                ),
+                                                                'Key' => array(
+                                                                    'type' => 'string',
+                                                                ),
+                                                                'KeyMd5' => array(
+                                                                    'type' => 'string',
+                                                                ),
+                                                                'InitializationVector' => array(
+                                                                    'type' => 'string',
+                                                                ),
+                                                            ),
+                                                        ),
+                                                    ),
+                                                ),
+                                            ),
+                                        ),
+                                    ),
+                                    'Composition' => array(
+                                        'type' => 'array',
+                                        'items' => array(
+                                            'name' => 'Clip',
+                                            'type' => 'object',
+                                            'properties' => array(
+                                                'TimeSpan' => array(
+                                                    'type' => 'object',
+                                                    'properties' => array(
+                                                        'StartTime' => array(
+                                                            'type' => 'string',
+                                                        ),
+                                                        'Duration' => array(
+                                                            'type' => 'string',
+                                                        ),
+                                                    ),
+                                                ),
+                                            ),
+                                        ),
+                                    ),
+                                    'Captions' => array(
+                                        'type' => 'object',
+                                        'properties' => array(
+                                            'MergePolicy' => array(
+                                                'type' => 'string',
+                                            ),
+                                            'CaptionSources' => array(
+                                                'type' => 'array',
+                                                'items' => array(
+                                                    'name' => 'CaptionSource',
+                                                    'type' => 'object',
+                                                    'properties' => array(
+                                                        'Key' => array(
+                                                            'type' => 'string',
+                                                        ),
+                                                        'Language' => array(
+                                                            'type' => 'string',
+                                                        ),
+                                                        'TimeOffset' => array(
+                                                            'type' => 'string',
+                                                        ),
+                                                        'Label' => array(
+                                                            'type' => 'string',
+                                                        ),
+                                                        'Encryption' => array(
+                                                            'type' => 'object',
+                                                            'properties' => array(
+                                                                'Mode' => array(
+                                                                    'type' => 'string',
+                                                                ),
+                                                                'Key' => array(
+                                                                    'type' => 'string',
+                                                                ),
+                                                                'KeyMd5' => array(
+                                                                    'type' => 'string',
+                                                                ),
+                                                                'InitializationVector' => array(
+                                                                    'type' => 'string',
+                                                                ),
+                                                            ),
+                                                        ),
+                                                    ),
+                                                ),
+                                            ),
+                                            'CaptionFormats' => array(
+                                                'type' => 'array',
+                                                'items' => array(
+                                                    'name' => 'CaptionFormat',
+                                                    'type' => 'object',
+                                                    'properties' => array(
+                                                        'Format' => array(
+                                                            'type' => 'string',
+                                                        ),
+                                                        'Pattern' => array(
+                                                            'type' => 'string',
+                                                        ),
+                                                        'Encryption' => array(
+                                                            'type' => 'object',
+                                                            'properties' => array(
+                                                                'Mode' => array(
+                                                                    'type' => 'string',
+                                                                ),
+                                                                'Key' => array(
+                                                                    'type' => 'string',
+                                                                ),
+                                                                'KeyMd5' => array(
+                                                                    'type' => 'string',
+                                                                ),
+                                                                'InitializationVector' => array(
+                                                                    'type' => 'string',
+                                                                ),
+                                                            ),
+                                                        ),
+                                                    ),
+                                                ),
+                                            ),
+                                        ),
+                                    ),
+                                    'Encryption' => array(
+                                        'type' => 'object',
+                                        'properties' => array(
+                                            'Mode' => array(
+                                                'type' => 'string',
+                                            ),
+                                            'Key' => array(
+                                                'type' => 'string',
+                                            ),
+                                            'KeyMd5' => array(
+                                                'type' => 'string',
+                                            ),
+                                            'InitializationVector' => array(
+                                                'type' => 'string',
                                             ),
                                         ),
                                     ),
@@ -2568,6 +4822,12 @@ return array (
                         'Status' => array(
                             'type' => 'string',
                         ),
+                        'UserMetadata' => array(
+                            'type' => 'object',
+                            'additionalProperties' => array(
+                                'type' => 'string',
+                            ),
+                        ),
                     ),
                 ),
             ),
@@ -2599,6 +4859,9 @@ return array (
                             'type' => 'string',
                         ),
                         'Role' => array(
+                            'type' => 'string',
+                        ),
+                        'AwsKmsKeyArn' => array(
                             'type' => 'string',
                         ),
                         'Notifications' => array(
@@ -2699,6 +4962,9 @@ return array (
                         'Id' => array(
                             'type' => 'string',
                         ),
+                        'Arn' => array(
+                            'type' => 'string',
+                        ),
                         'Name' => array(
                             'type' => 'string',
                         ),
@@ -2722,6 +4988,14 @@ return array (
                                 ),
                                 'Channels' => array(
                                     'type' => 'string',
+                                ),
+                                'CodecOptions' => array(
+                                    'type' => 'object',
+                                    'properties' => array(
+                                        'Profile' => array(
+                                            'type' => 'string',
+                                        ),
+                                    ),
                                 ),
                             ),
                         ),
@@ -2897,6 +5171,9 @@ return array (
                         'Role' => array(
                             'type' => 'string',
                         ),
+                        'AwsKmsKeyArn' => array(
+                            'type' => 'string',
+                        ),
                         'Notifications' => array(
                             'type' => 'object',
                             'properties' => array(
@@ -3011,6 +5288,9 @@ return array (
                             'type' => 'string',
                         ),
                         'Role' => array(
+                            'type' => 'string',
+                        ),
+                        'AwsKmsKeyArn' => array(
                             'type' => 'string',
                         ),
                         'Notifications' => array(
@@ -3129,6 +5409,9 @@ return array (
                         'Role' => array(
                             'type' => 'string',
                         ),
+                        'AwsKmsKeyArn' => array(
+                            'type' => 'string',
+                        ),
                         'Notifications' => array(
                             'type' => 'object',
                             'properties' => array(
@@ -3218,23 +5501,25 @@ return array (
         ),
     ),
     'iterators' => array(
-        'operations' => array(
-            'ListJobsByPipeline' => array(
-                'token_param' => 'PageToken',
-                'token_key' => 'NextPageToken',
-                'result_key' => 'Jobs',
-            ),
-            'ListJobsByStatus' => array(
-                'token_param' => 'PageToken',
-                'token_key' => 'NextPageToken',
-                'result_key' => 'Jobs',
-            ),
-            'ListPipelines' => array(
-                'result_key' => 'Pipelines',
-            ),
-            'ListPresets' => array(
-                'result_key' => 'Presets',
-            ),
+        'ListJobsByPipeline' => array(
+            'input_token' => 'PageToken',
+            'output_token' => 'NextPageToken',
+            'result_key' => 'Jobs',
+        ),
+        'ListJobsByStatus' => array(
+            'input_token' => 'PageToken',
+            'output_token' => 'NextPageToken',
+            'result_key' => 'Jobs',
+        ),
+        'ListPipelines' => array(
+            'input_token' => 'PageToken',
+            'output_token' => 'NextPageToken',
+            'result_key' => 'Pipelines',
+        ),
+        'ListPresets' => array(
+            'input_token' => 'PageToken',
+            'output_token' => 'NextPageToken',
+            'result_key' => 'Presets',
         ),
     ),
 );

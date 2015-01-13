@@ -29,6 +29,26 @@ return array (
             'https' => true,
             'hostname' => 'datapipeline.us-east-1.amazonaws.com',
         ),
+        'us-west-2' => array(
+            'http' => false,
+            'https' => true,
+            'hostname' => 'datapipeline.us-west-2.amazonaws.com',
+        ),
+        'eu-west-1' => array(
+            'http' => false,
+            'https' => true,
+            'hostname' => 'datapipeline.eu-west-1.amazonaws.com',
+        ),
+        'ap-southeast-2' => array(
+            'http' => false,
+            'https' => true,
+            'hostname' => 'datapipeline.ap-southeast-2.amazonaws.com',
+        ),
+        'ap-northeast-1' => array(
+            'http' => false,
+            'https' => true,
+            'hostname' => 'datapipeline.ap-northeast-1.amazonaws.com',
+        ),
     ),
     'operations' => array(
         'ActivatePipeline' => array(
@@ -58,6 +78,27 @@ return array (
                     'location' => 'json',
                     'minLength' => 1,
                     'maxLength' => 1024,
+                ),
+                'parameterValues' => array(
+                    'type' => 'array',
+                    'location' => 'json',
+                    'items' => array(
+                        'name' => 'ParameterValue',
+                        'type' => 'object',
+                        'properties' => array(
+                            'id' => array(
+                                'required' => true,
+                                'type' => 'string',
+                                'minLength' => 1,
+                                'maxLength' => 256,
+                            ),
+                            'stringValue' => array(
+                                'required' => true,
+                                'type' => 'string',
+                                'maxLength' => 10240,
+                            ),
+                        ),
+                    ),
                 ),
             ),
             'errorResponses' => array(
@@ -591,6 +632,64 @@ return array (
                         ),
                     ),
                 ),
+                'parameterObjects' => array(
+                    'type' => 'array',
+                    'location' => 'json',
+                    'items' => array(
+                        'name' => 'ParameterObject',
+                        'type' => 'object',
+                        'properties' => array(
+                            'id' => array(
+                                'required' => true,
+                                'type' => 'string',
+                                'minLength' => 1,
+                                'maxLength' => 256,
+                            ),
+                            'attributes' => array(
+                                'required' => true,
+                                'type' => 'array',
+                                'items' => array(
+                                    'name' => 'ParameterAttribute',
+                                    'type' => 'object',
+                                    'properties' => array(
+                                        'key' => array(
+                                            'required' => true,
+                                            'type' => 'string',
+                                            'minLength' => 1,
+                                            'maxLength' => 256,
+                                        ),
+                                        'stringValue' => array(
+                                            'required' => true,
+                                            'type' => 'string',
+                                            'maxLength' => 10240,
+                                        ),
+                                    ),
+                                ),
+                            ),
+                        ),
+                    ),
+                ),
+                'parameterValues' => array(
+                    'type' => 'array',
+                    'location' => 'json',
+                    'items' => array(
+                        'name' => 'ParameterValue',
+                        'type' => 'object',
+                        'properties' => array(
+                            'id' => array(
+                                'required' => true,
+                                'type' => 'string',
+                                'minLength' => 1,
+                                'maxLength' => 256,
+                            ),
+                            'stringValue' => array(
+                                'required' => true,
+                                'type' => 'string',
+                                'maxLength' => 10240,
+                            ),
+                        ),
+                    ),
+                ),
             ),
             'errorResponses' => array(
                 array(
@@ -727,6 +826,31 @@ return array (
                     'location' => 'json',
                     'minLength' => 1,
                     'maxLength' => 2048,
+                ),
+                'fields' => array(
+                    'type' => 'array',
+                    'location' => 'json',
+                    'items' => array(
+                        'name' => 'Field',
+                        'type' => 'object',
+                        'properties' => array(
+                            'key' => array(
+                                'required' => true,
+                                'type' => 'string',
+                                'minLength' => 1,
+                                'maxLength' => 256,
+                            ),
+                            'stringValue' => array(
+                                'type' => 'string',
+                                'maxLength' => 10240,
+                            ),
+                            'refValue' => array(
+                                'type' => 'string',
+                                'minLength' => 1,
+                                'maxLength' => 256,
+                            ),
+                        ),
+                    ),
                 ),
             ),
             'errorResponses' => array(
@@ -900,11 +1024,6 @@ return array (
                     'required' => true,
                     'type' => 'string',
                     'location' => 'json',
-                    'enum' => array(
-                        'FINISHED',
-                        'FAILED',
-                        'FALSE',
-                    ),
                 ),
                 'errorId' => array(
                     'type' => 'string',
@@ -1016,6 +1135,64 @@ return array (
                                         ),
                                     ),
                                 ),
+                            ),
+                        ),
+                    ),
+                ),
+                'parameterObjects' => array(
+                    'type' => 'array',
+                    'location' => 'json',
+                    'items' => array(
+                        'name' => 'ParameterObject',
+                        'type' => 'object',
+                        'properties' => array(
+                            'id' => array(
+                                'required' => true,
+                                'type' => 'string',
+                                'minLength' => 1,
+                                'maxLength' => 256,
+                            ),
+                            'attributes' => array(
+                                'required' => true,
+                                'type' => 'array',
+                                'items' => array(
+                                    'name' => 'ParameterAttribute',
+                                    'type' => 'object',
+                                    'properties' => array(
+                                        'key' => array(
+                                            'required' => true,
+                                            'type' => 'string',
+                                            'minLength' => 1,
+                                            'maxLength' => 256,
+                                        ),
+                                        'stringValue' => array(
+                                            'required' => true,
+                                            'type' => 'string',
+                                            'maxLength' => 10240,
+                                        ),
+                                    ),
+                                ),
+                            ),
+                        ),
+                    ),
+                ),
+                'parameterValues' => array(
+                    'type' => 'array',
+                    'location' => 'json',
+                    'items' => array(
+                        'name' => 'ParameterValue',
+                        'type' => 'object',
+                        'properties' => array(
+                            'id' => array(
+                                'required' => true,
+                                'type' => 'string',
+                                'minLength' => 1,
+                                'maxLength' => 256,
+                            ),
+                            'stringValue' => array(
+                                'required' => true,
+                                'type' => 'string',
+                                'maxLength' => 10240,
                             ),
                         ),
                     ),
@@ -1191,6 +1368,50 @@ return array (
                                         ),
                                     ),
                                 ),
+                            ),
+                        ),
+                    ),
+                ),
+                'parameterObjects' => array(
+                    'type' => 'array',
+                    'location' => 'json',
+                    'items' => array(
+                        'name' => 'ParameterObject',
+                        'type' => 'object',
+                        'properties' => array(
+                            'id' => array(
+                                'type' => 'string',
+                            ),
+                            'attributes' => array(
+                                'type' => 'array',
+                                'items' => array(
+                                    'name' => 'ParameterAttribute',
+                                    'type' => 'object',
+                                    'properties' => array(
+                                        'key' => array(
+                                            'type' => 'string',
+                                        ),
+                                        'stringValue' => array(
+                                            'type' => 'string',
+                                        ),
+                                    ),
+                                ),
+                            ),
+                        ),
+                    ),
+                ),
+                'parameterValues' => array(
+                    'type' => 'array',
+                    'location' => 'json',
+                    'items' => array(
+                        'name' => 'ParameterValue',
+                        'type' => 'object',
+                        'properties' => array(
+                            'id' => array(
+                                'type' => 'string',
+                            ),
+                            'stringValue' => array(
+                                'type' => 'string',
                             ),
                         ),
                     ),
@@ -1421,6 +1642,30 @@ return array (
                     'location' => 'json',
                 ),
             ),
+        ),
+    ),
+    'iterators' => array(
+        'ListPipelines' => array(
+            'input_token' => 'marker',
+            'output_token' => 'marker',
+            'more_results' => 'hasMoreResults',
+            'result_key' => 'pipelineIdList',
+        ),
+        'DescribeObjects' => array(
+            'input_token' => 'marker',
+            'output_token' => 'marker',
+            'more_results' => 'hasMoreResults',
+            'result_key' => 'pipelineObjects',
+        ),
+        'DescribePipelines' => array(
+            'result_key' => 'pipelineDescriptionList',
+        ),
+        'QueryObjects' => array(
+            'input_token' => 'marker',
+            'output_token' => 'marker',
+            'more_results' => 'hasMoreResults',
+            'limit_key' => 'limit',
+            'result_key' => 'ids',
         ),
     ),
 );

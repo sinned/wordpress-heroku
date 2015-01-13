@@ -139,8 +139,8 @@ function wp_mail( $to, $subject, $message, $headers = '', $attachments = array()
 		'text' => $message
 	);
 
-	$body['o:tracking-clicks'] = $mailgun['track-clicks'] ? $mailgun['track-clicks'] : "no";
-	$body['o:tracking-opens'] = $mailgun['track-opens'] ? "yes" : "no";
+	$body['o:tracking-clicks'] = isset( $mailgun['track-clicks'] ) ? $mailgun['track-clicks'] : "no";
+	$body['o:tracking-opens'] = isset( $mailgun['track-opens'] ) ? "yes" : "no";
 
 	if ( isset( $mailgun['tag'] ) ){
 		$tags = explode(",", str_replace(" ","", $mailgun['tag']));
@@ -209,7 +209,7 @@ function wp_mail( $to, $subject, $message, $headers = '', $attachments = array()
 			foreach($value as $key => $value){
 				$payload .= '--' . $boundary;
 		        $payload .= "\r\n";
-		        $payload .= 'Content-Disposition: form-data; name="' . $parent_key . '[' . $key . ']"' . "\r\n\r\n";
+		        $payload .= 'Content-Disposition: form-data; name="' . $parent_key . "\"\r\n\r\n";
 		        $payload .= $value;
 		        $payload .= "\r\n";
 			}
@@ -227,20 +227,22 @@ function wp_mail( $to, $subject, $message, $headers = '', $attachments = array()
 	if ( !empty( $attachments ) ){
 		$i = 0;
 		foreach ( $attachments as $attachment ) {
-		    $payload .= '--' . $boundary;
-		    $payload .= "\r\n";
-	        $payload .= 'Content-Disposition: form-data; name="attachment[' . $i . ']"; filename="' . basename( $attachment ) . '"' . "\r\n\r\n";
-	        $payload .= file_get_contents( $attachment );
-	        $payload .= "\r\n";
-	        $i++;
+		    if ( !empty( $attachment ) ) {
+		        $payload .= '--' . $boundary;
+		        $payload .= "\r\n";
+	            $payload .= 'Content-Disposition: form-data; name="attachment[' . $i . ']"; filename="' . basename( $attachment ) . '"' . "\r\n\r\n";
+	            $payload .= file_get_contents( $attachment );
+	            $payload .= "\r\n";
+	            $i++;
+		    }
 		}
 	}
-	
+
 	$payload .= '--' . $boundary . '--';
-	
+
 	$data = array(
 		'body' => $payload,
-		'headers' => array('Authorization' => 'Basic ' . base64_encode( "api:{$apiKey}"), 
+		'headers' => array('Authorization' => 'Basic ' . base64_encode( "api:{$apiKey}"),
 					       'content-type' => 'multipart/form-data; boundary=' . $boundary)
 	);
 
