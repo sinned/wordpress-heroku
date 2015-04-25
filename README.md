@@ -17,6 +17,10 @@ Create a heroku app
 Add a MySQL App to your app (in my case, I chose ClearDB)
 
 	$ heroku addons:add cleardb:ignite
+
+Add Mandrill to your app.. Heroku Email doesn't work out of the box, so you need this:
+
+	$ heroku addons:add mandrill:starter
 	
 With this config set, now we can push to heroku
 	$ git push heroku master
@@ -28,4 +32,4 @@ Heroku's file system is "ephemeral". While you can write to the heroku server, a
 
 So, I've included the <a href="http://wordpress.org/plugins/amazon-s3-and-cloudfront/">Amazon S3 for Wordpress with Cloudfront</a> plugin to handle uploads -- to use, enable the Plugin and set it up with your AWS S3 credentials.
 
-Also -- email from the server does not seem to work from Heroku, so I've included the <a href="http://wordpress.org/extend/plugins/wpmandrill/">wpmandrill</a> plugin that sends out all wordpress emails through the Mandrill Email API, which I love. I've also included the Mailgun plugin, which is just as good.
+
