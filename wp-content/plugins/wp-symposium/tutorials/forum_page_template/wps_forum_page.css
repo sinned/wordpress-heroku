@@ -1,0 +1,199 @@
+/* WordPress style changes */
+
+.entry-header, .hentry, .entry-content { /* Force content to fit top and width */
+	margin:0px !important;
+	padding:0px !important;
+	width:100% !important;
+}
+
+.singular .entry-meta .edit-link a { /* Move edit button */
+    position: absolute;
+    bottom: auto;
+    right: 0px;
+    left: auto;
+    top: 25px;
+}
+
+/* General styles */
+
+.my-input-box {
+	background-color:#eee !important;
+	height:22px;
+	width:196px;
+}
+.my-submit-button {
+	background-color:#ccc;
+	height:30px;
+	width:70px;
+	font-size:12px;
+}
+
+.my-notice {
+	width:100%;
+	background-color: yellow;
+	color: red;
+	padding:6px;
+	text-align:center;
+}
+
+/* Categories table */
+
+#my-forum-table {
+	clear: both;
+	border: 1px solid #333;
+	margin-bottom:20px;
+}
+
+.my-forum-title, .my-forum-title-topic, .my-topics-title-topic, .my-topics-title-replies {
+	width:30%;
+	font-weight: bold;
+	float: left;
+	padding: 6px;
+}
+.my-forum-title-topic {
+	float: right;
+	width:50%;
+}
+.my-topics-title-topic {
+	float: right;
+	width: 50%;
+}
+.my-topics-title-replies {
+	float: right;
+	width: 10%;
+	text-align:center;
+}
+
+.my-forum-row, .my-topic-row {
+	clear: both;
+	overflow: auto;
+	border-bottom: 1px solid #999;
+}
+.my-topic-row {
+	clear: both;
+	height: 60px;
+	overflow: hidden;
+}
+.my-forum-row-header, .my-topic-row-header {
+	background-color: #ccc;
+	overflow:auto;
+	border-bottom: 1px solid #999;
+}
+.my-topic-row-header {
+	clear: both;
+}
+
+.my-forum-row-title, .my-topic-row-title {
+	width:30%;
+	font-weight: bold;
+	float: left;
+	padding: 6px;
+	font-size:28px;
+	letter-spacing: -1px;
+}
+.my-topic-row-title {
+	font-size:16px;
+}
+.my-forum-row-last-topic, .my-topics-row-last-topic {
+	width:60%;
+	float: right;
+	padding: 6px;
+}
+.my-forum-row-last-topic {
+	width: 50%;
+}
+
+.my-forum-row-last-topic-owner {
+	font-style: italic;
+	color: #999;
+}
+.my-forum-row-last-num-views {
+	font-style: italic;
+	color: #999;
+}
+
+.my-forum-row-last-topic-started {
+	font-style: italic;
+	color: #aaa;
+}
+
+.my-forum-row-last-topic-avatar, .my-topic-row-last-topic-avatar {
+	float:left;
+	margin-right:10px;
+}
+
+.my-forum-row-num-replies {
+	float: right;
+	width: 10%;
+	text-align:center;
+	font-size:20px;
+	padding-top:13px;
+}
+
+/* Single topic */
+
+#my-topic-breadcrumbs {
+	margin-bottom:15px;
+}
+
+#my-forum-topic {
+	padding-left:120px;
+}
+
+#my-topic-subject {
+	font-size:22px;
+	letter-spacing:-1px;
+}
+
+#my-topic-author {
+	font-style: italic;
+	color: #999;
+	margin-bottom: 15px;
+}
+
+#my-topic-avatar {
+	float: left;
+	margin-right:15px;
+	padding-top:6px;
+}
+
+#my-topic-first-post {
+	margin-bottom:25px;
+}
+
+/* Replies */
+
+.my-forum-reply {
+	overflow: auto;
+	padding-left:40px;
+	margin-bottom:10px;
+}
+
+.my-reply-author {
+	font-style: italic;
+	color: #999;
+	margin-bottom: 5px;
+}
+
+.my-reply-avatar {
+	float: left;
+	margin-right:18px;
+	padding-top:3px;
+}
+
+.my-reply-text {
+	padding-left:80px;
+}
+
+/* Quick reply */
+
+.my-reply {
+	font-weight:bold;
+}
+
+.my-reply-textarea {
+	width:500px;
+	height:150px;
+}
+
+

@@ -1,0 +1,10 @@
+****************************
+* Change log for 14.05     *
+****************************
+
+This information is also available at http://www.wpsymposium.com/wp-content/plugins/wp-symposium/release.txt.
+
+
+Added option under Manage->Settings to exclude TinyMCE from loading
+Minor fix for line breaks after editing in forums
+

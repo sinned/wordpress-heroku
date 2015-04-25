@@ -1,0 +1,149 @@
+/* General style */
+.my-input-box {
+	background-color:#eee !important;
+	height:22px;
+	width:196px;
+}
+.my-submit-button {
+	background-color:#ccc;
+	height:30px;
+	width:70px;
+	font-size:12px;
+}
+
+/* Compose form */
+
+#my-compose-form {
+	clear: both;
+	display:none;
+	margin-bottom:15px;
+}
+
+#my-compose-form-to {
+}
+
+.my-compose-form-subject {
+	clear: both;
+	width: 400px;
+	margin-top:15px;
+}
+
+.my-compose-form-message {
+	clear: both;
+	margin-top:15px;
+	margin-bottom:15px;
+	width: 400px;
+	height: 200px;
+}
+
+/* Search box */
+
+#my-search-box {
+	clear: both;
+	margin-top:10px;
+	margin-bottom:10px;
+	overflow: auto;
+}
+
+#my-search-box-label {
+	float:left;
+	margin-right:15px;
+}
+
+#my-search-box-term {
+	float:left;
+	margin-right:15px;
+}
+
+.my-search-box-button {
+	float:left;
+	margin-right:5px;
+}
+
+/* In Box */
+
+#my-boxes-choice {
+	float: right;
+}
+
+#my-inbox {
+	clear:both;
+	border-left:1px solid #aaa;
+	border-right:1px solid #aaa;
+	margin-bottom:10px;
+	overflow:auto;
+}
+
+#my-inbox-header {
+	font-weight: bold;
+	background-color: #999;
+	border-bottom:1px solid #aaa;	
+	overflow:auto;
+}
+
+.my-inbox-row {
+	clear: both;
+	border-bottom:1px solid #aaa;
+	padding-top:4px;
+	padding-left:4px;
+	overflow:auto;
+}
+
+.my-inbox-from {
+	width:180px;
+	padding:3px;
+	float: left;
+}
+.my-inbox-avatar {
+	margin-right:5px;
+	float: left;
+}
+.my-inbox-sent {
+	width:130px;
+	padding:3px;
+	float: right;
+	text-align: right;
+}
+.my-inbox-subject {
+	font-weight: bold
+}
+.my-inbox-message {
+	float: left;
+}
+.my-inbox-unread {
+	background-color: #eee;
+}
+
+/* Mail message */
+
+#my-mail {
+	border:1px solid #aaa;
+	padding:10px 10px 20px 10px;
+	margin-bottom:20px;
+}
+#my-mail-avatar {
+	float: right;
+	margin-left:10px;
+	margin-bottom:10px;
+}
+#my-mail-from {
+	font-weight:bold;
+	margin-bottom:5px;
+}
+#my-mail-subject {
+	margin-bottom:5px;
+}
+#my-mail-sent {
+	margin-bottom:5px;
+}
+.my-mail-label {
+	width:80px;
+	font-weight:bold;
+	float:left;
+}
+
+/* Paging */
+
+#my-inbox-pages {
+	float: right;
+}

@@ -1,0 +1,275 @@
+<html>
+<head>
+
+<script type='text/javascript' src='../../../../../wp-includes/js/jquery/jquery.js'></script>
+<link rel='stylesheet' href='../../css/chat.css' type='text/css' media='all' />
+
+<script type="text/javascript">
+
+
+	jQuery(document).ready(function() {
+
+		// Chat ========================
+
+		var $_GET = {};
+		
+		document.location.search.replace(/\??(?:([^=]+)=([^&]*)&?)/g, function () {
+		    function decode(s) {
+		        return decodeURIComponent(s.split("+").join(" "));
+		    }
+		
+		    $_GET[decode(arguments[1])] = decode(arguments[2]);
+		});
+
+		if (typeof $_GET["id"] !== "undefined") {
+		
+			window.heartBeat = $_GET["heartBeat"];
+			var current_user_id = $_GET["id"];
+			var partner_username = $_GET["partner"];
+			window.partner_id = $_GET["partner_id"];
+			var plugin_url = $_GET["url"];
+			var chat_sound = $_GET["chat_sound"];
+			
+			jQuery.ajax({
+				type: "POST",
+				url: plugin_url+'ajax/chat/get_display_name.php',	
+				async: true,					
+				data: ({
+					partner_id: $_GET["partner_id"]
+				}),
+				success: function(i){			
+					document.title = i;
+				}
+			});
+			
+			// set focus in Message area
+			jQuery(document).on('click', '.chatbox', function(){
+				jQuerytextarea = jQuery('.chat_message textarea',this);		
+				jQuerytextarea.focus();
+			});
+			
+			
+			//SEND MESSAGE ON ENTER		
+			jQuery(document).on('keypress', '.chat_message', function (e) {
+
+				if (e.keyCode == 13 && !e.shiftKey) {
+
+					e.preventDefault();
+
+					//add to MySQL DB with AJAX and PHP
+					var to_id = jQuery(this).closest('.chatbox').attr('title');
+					var this_chat_window_id = jQuery(this).closest('.chatbox').attr('id');
+					var this_textarea = jQuery('.chat_message textarea');
+					var datastring = 'from_id='+current_user_id+'&to_id='+to_id+'&message='+this_textarea.val();
+
+					if (this_textarea.val() != 'Sending... Please wait  ') {
+
+						if (this_textarea.val() != '') {
+					
+							// show sending message
+							this_textarea.val('Sending... Please wait  ').attr('disabled', 'disabled');
+			
+							jQuery.ajax({
+								type: "POST",
+								url: plugin_url+'ajax/chat/send_message.php',	
+								async: true,					
+								data: datastring,
+								success: function(i){			
+									if(i == 1){
+										//if success, reload chat area
+										this_textarea.val('').removeAttr('disabled');							
+									}else{					
+										//if error,  print it into chat
+										print_to_chat(this_chat_window_id,'<p><span class="error">Error! Message not sent!</span></p>');
+										//uncomment to print mysql error to chat
+										print_to_chat(i);								
+									}
+								}
+							});
+							
+						}
+					}
+				}				
+			});
+			
+					
+			//LOOP OF LIFE - checks every ... seconds if there's a new message
+			function liveChat(){
+				//go through all popped up window and reload messages, mark those messages as received			
+				jQuery('.chatbox').each(function(){												
+					var this_chatbox = jQuery(this);
+					var this_chatbox_chat_area = jQuery('.chat_area',this);		
+					var this_chatbox_headerbg = jQuery('.header',this);				
+					var this_chatbox_header = jQuery('.header p',this);				
+					var this_chatbox_max_btn  = jQuery('.header .maximize_chatbox',this);				
+					var this_chatbox_id = jQuery(this).attr('title');
+					var this_newmessage = jQuery('.header p .new_message',this);				
+					//v1.2 -----------------------------------------------------
+					
+					var this_chatbox_textarea  = jQuery('.chat_message textarea',this);								
+					//v1.2 -----------------------------------------------------								
+					jQuery.ajax({
+						type: "POST",
+						url: plugin_url+'ajax/chat/load_message.php',								
+						data: 'own_id='+current_user_id+'&partner_id='+this_chatbox_id,
+						async: true,					
+						success: function(i){	
+
+							//reload messages in chat area
+							if(i != 0){			
+								
+								// id of last message			
+
+								var current_chat = this_chatbox_chat_area.html();
+								var old_id = false;
+								if (current_chat.indexOf('#[') >= 0) {
+									var start_pos = current_chat.indexOf('#[') + 2;
+									var end_pos = current_chat.indexOf(']#',start_pos);
+									old_id = current_chat.substring(start_pos,end_pos);
+								}
+															
+								var new_chat = i.replace(/\\\'/g,'\'').replace(/\\\"/g,'\"');								
+								start_pos = new_chat.indexOf('#[') + 2;
+								end_pos = new_chat.indexOf(']#',start_pos);
+								var new_id = new_chat.substring(start_pos,end_pos);
+								
+								// who sent last message?
+
+								if (new_chat.indexOf('#{') >= 0) {
+									start_pos = new_chat.indexOf('#{') + 2;
+									end_pos = new_chat.indexOf('}#',start_pos);
+									var last_id = new_chat.substring(start_pos,end_pos);
+								}
+
+								// show chat
+																
+								var chat_output = i;
+								chat_output = i.replace(/\\\'/g,'\'').replace(/\\\"/g,'\"');
+								chat_output = chat_output.replace(/#\[/g,'<div style="clear:both;display:none;">#[').replace(/\]#/g,']#</div>');
+								chat_output = chat_output.replace(/#\{/g,'<div style="clear:both;display:none;">#{').replace(/\}#/g,'}#</div>');
+								this_chatbox_chat_area.html(chat_output);	
+
+								// scroll to bottom
+								this_chatbox_chat_area.animate({scrollTop: 9999999},200);
+
+								if (old_id) {
+									
+									if (old_id != new_id){
+										
+										if (last_id != current_user_id) {
+
+											this_chatbox.data('havenewmessage',1);
+											this_chatbox.data('playedsound', 0);
+											
+											// alert user?
+											if (this_chatbox.data('focused') != 1 && this_chatbox.data('havenewmessage') == 1) { // blinking chat window if not focused and have a new message
+												this_chatbox_headerbg.removeClass("header_bg_default").addClass("header_bg_blink");
+											}					
+											if (this_chatbox.data('havenewmessage') == 1) { // blinking chat window if not focused and have a new message
+												if (chat_sound != 'none' && this_chatbox.data('playedsound') == 0) { // sound
+													this_chatbox.data('playedsound', 1);
+													jQuery("#player_div").empty();
+													jQuery("#player_div").prepend(__wps__insertPlayer(plugin_url+'/ajax/chat/flash/player.swf', plugin_url+'/ajax/chat/flash/'+chat_sound));
+												}
+											}	
+	
+										}				
+									
+									}
+									
+								}
+								
+							}else{
+								this_chatbox_chat_area.html('');
+							}
+						}
+					});	
+					
+				});
+
+				
+				//and start the loop again
+				t=setTimeout(liveChat,heartBeat);
+			}
+			
+			PopupChat(partner_id, partner_username, 1);		
+			liveChat();	//start the chat
+
+			// Chat functions 
+			history.navigationMode = 'compatible';	//for Opera to support unload function
+			var windowscount = 0;	
+			var chatboxcount = 0;
+		
+		}
+
+		//PRINT A LINE TO CHAT 
+		function print_to_chat(window_id,text){
+			jQuery('#'+window_id+' .chat_area').append(text);
+		}
+
+				
+		function PopupChat(partner_id,partner_username,chatbox_status){
+			windowscount ++;
+			chatboxcount ++;
+			var wctr = windowscount;
+			
+			jQuery('body').append('<div class="chatbox cb_default" id="chat_window_'+wctr+'" title="'+partner_id+'" style="border:0;height:280px" >'+
+				'<div class="header header_bg_default" style="display:none" title="'+partner_username+'">'+
+					'<p>'+partner_username+'</p>'+
+				'</div>'+
+				'<div class="chat_area" title="'+partner_username+'">'+
+				'</div>'+
+				'<div class="chat_message" title="Type your message here">'+
+					'<textarea></textarea>'+
+				'</div>'+
+			'</div>');
+			if (chatbox_status == 2) {
+				jQuery('#chat_window_'+wctr).css('height','0px');		
+				jQuery('#chat_window_'+wctr).css('height','25px');
+				jQuery('#chat_window_'+wctr+',.minimize_chatbox').css('display','none');
+				jQuery('#chat_window_'+wctr+',.maximize_chatbox').css('display','inline');
+			}
+			jQuery('#chat_window_'+wctr).css('right','0px');		
+			jQuery('#chat_window_'+wctr).data('chatbox_status',chatbox_status);
+			jQuery('#chat_window_'+wctr).data('partner_id',partner_id);
+			jQuery('#chat_window_'+wctr).data('partner_username',partner_username);
+			jQuery('#chat_window_'+wctr).attr('title', partner_id); 
+		
+			print_to_chat('chat_window_'+wctr,'<p class="system">Please wait...</p>');
+	        
+			return false;
+		}
+
+		function __wps__insertPlayer(playerpath,filename){
+
+				var mp3html = '<object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" ';
+				mp3html += 'width="1" height="1" ';
+				mp3html += 'codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab">';
+				mp3html += '<param name="movie" value="'+playerpath+'?';
+				mp3html += 'showDownload=false&file=' + filename + '&autoStart=true';
+				mp3html += '&backColor=ffffff&frontColor=ffffff';
+				mp3html += '&repeatPlay=false&songVolume=50" />';
+				mp3html += '<param name="wmode" value="transparent" />';
+				mp3html += '<embed wmode="transparent" width="1" height="1" ';
+				mp3html += 'src="' + playerpath + '?'
+				mp3html += 'showDownload=false&file=' + filename + '&autoStart=true';
+				mp3html += '&backColor=ffffff&frontColor=ffffff';
+				mp3html += '&repeatPlay=false&songVolume=50" ';
+				mp3html += 'type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer" />';
+				mp3html += '</object>';
+				return mp3html;
+		
+		}
+			
+	});
+
+
+		
+	
+</script>
+
+</head>
+
+<body style="margin:0;padding:0;overflow:hidden;"><style>.chatbox .chat_area p{ font-family: "Trebuchet MS", sans-serif; margin-bottom:3px !important; } .chatbox .chat_area .notme{ margin-right: 10px; }</style><div id="player_div"></div></body>
+
+</html>

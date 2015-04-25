@@ -1,0 +1,156 @@
+/* General style */
+.my-input-box {
+	background-color:#eee !important;
+	height:22px;
+	width:196px;
+}
+.my-submit-button {
+	background-color:#ccc;
+	height:30px;
+	width:70px;
+	font-size:12px;
+}
+
+/* Header */
+#my-header-div {
+	width:600px; 
+	float:right; 
+	margin-bottom:20px; 
+	overflow:auto;
+}
+#my-display-name {
+	font-size:32px;
+}
+
+/* Information bar */
+#my-sidebar {
+	float:left;
+	width:220px;
+	border-left: 1px solid #aaa;
+	border-top: 1px solid #aaa;
+	border-right: 1px solid #333;
+	border-bottom: 1px solid #333;
+}
+#my-profile-box {
+	width:204px; 
+	padding:8px; 
+	background-color:#eee; 
+	text-align:left;
+}
+.my-info-label {
+	color:#999;
+}
+
+#my-friends-list {
+	margin-top:10px;
+}
+.my-friends-list-item {
+	clear: both; 
+	margin-bottom:4px;
+}
+
+#my-mail-info {
+	margin-top: 10px;
+}
+.my-mail-row {
+	clear: both;
+	border-bottom:1px solid #999;
+	border-top:1px solid #fff;
+	padding:4px 1px 1px 4px;
+}
+.my-mail-row:hover {
+	background-color:#ccc;
+	border-bottom:1px solid #fff;
+	border-top:1px solid #666;
+	padding:5px 0px 0px 5px;
+}
+.my-mail-row-avatar {
+	float: left;
+	margin-right:4px;
+}
+.my-mail-row-from-and-subject {
+}
+
+
+/* Menu */
+#my-menu {
+	margin-bottom:10px; 
+	background-color: #ddd; 
+	border-bottom: 1px solid #fff;
+	padding:10px; 
+	width:580px;
+	float: left;
+}
+.__wps__profile_menu {
+	border-left: 1px solid #aaa;
+	border-top: 1px solid #aaa;
+	border-right: 1px solid #333;
+	border-bottom: 1px solid #333;
+	background-color: #ccc;
+	width:120px;
+	float:left;
+	clear: none !important;
+	text-align:center;
+	margin-right:6px;
+	margin-bottom: 0px !important;
+}
+.__wps__profile_menu:hover {
+	background-color: #fff;
+}
+.__wps__profile_menu:active {
+	border-left: 1px solid #333;
+	border-top: 1px solid #333;
+	border-right: 1px solid #aaa;
+	border-bottom: 1px solid #aaa;
+}
+.__wps__profile_current {
+	background-color:#fff;
+}
+.__wps__profile_menu_icon {
+	width: 20px;
+	height: 20px;
+	padding-top:2px;
+}
+
+/* Drop down menu */
+#my-dropdown-menu {
+	float:left; 
+	cursor:pointer;
+	margin-left:20px;
+}
+#my-dropdown-menu-items {
+	position:absolute;
+	display:none;
+	width:120px;
+	border:1px solid #999;
+	border-bottom:0px;
+	border:1px solid red;
+}
+.my-dropdown-menu-item {
+	border:0px;
+	border-bottom:1px solid #999;
+	margin:0px !important;
+}
+.my-dropdown-menu-item:active {
+	border:0;
+	border-bottom:1px solid #999;
+	margin:0;
+	padding:0;
+}
+
+/* Content area */
+#my-content {
+	width:600px;
+	float:right;
+	border-left: 1px solid #aaa;
+	border-top: 1px solid #aaa;
+	border-right: 1px solid #333;
+	border-bottom: 1px solid #333;
+	background-color: #eee;
+	padding-bottom:10px;
+}
+.my-placeholder {
+	padding: 0 10px 10px 10px !important; 
+}
+
+

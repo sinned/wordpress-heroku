@@ -740,3 +740,10 @@ function twentyeleven_get_gallery_images() {
 
 	return $images;
 }
+
+// hack for localhost bbpress
+add_filter( 'bbp_verify_nonce_request_url', 'my_bbp_verify_nonce_request_url', 999, 1 );
+function my_bbp_verify_nonce_request_url( $requested_url )
+{
+    return 'http://localhost:8888' . $_SERVER['REQUEST_URI'];
+}
