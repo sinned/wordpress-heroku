@@ -1,9 +1,9 @@
 === CloudFlare ===
-Contributors: i3149, jchen329, jamescf, simon-says
+Contributors: i3149, jchen329, jamescf, simon-says, dfritsch
 Tags: cloudflare, comments, spam, cdn, free, website, performance, speed
 Requires at least: 2.8
-Tested up to: 3.9.1
-Stable tag: 1.3.14
+Tested up to: 4.1
+Stable tag: 1.3.18
 License: GPLv2
 
 The CloudFlare WordPress Plugin ensures your WordPress blog is running optimally on the CloudFlare platform.
@@ -37,6 +37,25 @@ You will also want to sign up your blog with CloudFlare.com
 [Read more](http://blog.cloudflare.com/introducing-the-cloudflare-wordpress-plugin) on why we created this plugin.
 
 == Changelog ==
+
+= 1.3.18 =
+
+* Bug: Clean up headers debugging message that can be displayed in some cases
+
+= 1.3.17 =
+
+* Limit http protocol rewriting to text/html Content-Type
+
+= 1.3.16 =
+
+* Update regex to not alter the canonical url
+
+= 1.3.15 =
+
+* Plugin settings are now found under Settings -> CloudFlare
+* Plugin is now using the WordPress HTTP_API  - this will give better support to those in hosting environments without cURL or an up to date CA cert bundle
+* Fixes to squash some PHP Warnings. Relocated error logging to only happen in WP_DEBUG mode
+* Added Protocol Rewriting option to support Flexible SSL
 
 = 1.3.14 =
 
